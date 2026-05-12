@@ -14,8 +14,9 @@
 #
 # Indexes
 #
-#  index_kanban_columns_on_account_id               (account_id)
-#  index_kanban_columns_on_account_id_and_position  (account_id,position)
+#  index_kanban_columns_on_account_id                      (account_id)
+#  index_kanban_columns_on_account_id_and_position         (account_id,position)
+#  index_kanban_columns_on_account_id_auto_receive_unique  (account_id) UNIQUE WHERE (column_function = 1)
 #
 # Foreign Keys
 #

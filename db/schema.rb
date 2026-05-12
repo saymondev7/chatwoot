@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_11_001747) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_12_132345) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -1032,6 +1032,24 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_11_001747) do
     t.integer "column_function", default: 0, null: false
     t.index ["account_id", "position"], name: "index_kanban_columns_on_account_id_and_position"
     t.index ["account_id"], name: "index_kanban_columns_on_account_id"
+    t.index ["account_id"], name: "index_kanban_columns_on_account_id_auto_receive_unique", unique: true, where: "(column_function = 1)"
+  end
+
+  create_table "kanban_macros", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.text "description"
+    t.boolean "enabled", default: true, null: false
+    t.integer "position", default: 0, null: false
+    t.jsonb "triggers", default: [], null: false
+    t.jsonb "conditions", default: [], null: false
+    t.jsonb "actions", default: [], null: false
+    t.boolean "system", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "enabled"], name: "index_kanban_macros_on_account_id_and_enabled"
+    t.index ["account_id", "position"], name: "index_kanban_macros_on_account_id_and_position"
+    t.index ["account_id"], name: "index_kanban_macros_on_account_id"
   end
 
   create_table "labels", force: :cascade do |t|
@@ -1436,6 +1454,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_11_001747) do
   add_foreign_key "kanban_cards", "kanban_columns"
   add_foreign_key "kanban_cards", "users", column: "created_by_id"
   add_foreign_key "kanban_columns", "accounts"
+  add_foreign_key "kanban_macros", "accounts", on_delete: :cascade
   create_trigger("accounts_after_insert_row_tr", :generated => true, :compatibility => 1).
       on("accounts").
       after(:insert).
