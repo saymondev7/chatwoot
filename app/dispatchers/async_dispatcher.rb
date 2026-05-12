@@ -15,6 +15,7 @@ class AsyncDispatcher < BaseDispatcher
       CsatSurveyListener.instance,
       HookListener.instance,
       InstallationWebhookListener.instance,
+      Kanban::Macros::MessageCreatedListener.instance,
       NotificationListener.instance,
       ParticipationListener.instance,
       ReportingEventListener.instance,
