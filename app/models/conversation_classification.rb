@@ -22,7 +22,7 @@
 
 class ConversationClassification < ApplicationRecord
   belongs_to :account
-  has_many :conversations, dependent: :nullify
+  has_many :conversations, foreign_key: :classification_id, dependent: :nullify, inverse_of: :classification
 
   enum classification_type: { standard: 0, won: 1, lost: 2 }
 
