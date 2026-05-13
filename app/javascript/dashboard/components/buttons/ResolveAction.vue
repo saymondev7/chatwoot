@@ -88,7 +88,9 @@ const toggleStatus = (
   snoozedUntil,
   customAttributes = null,
   classificationId = null,
-  closingNote = null
+  closingNote = null,
+  storeBranch = null,
+  quotationNumber = null
 ) => {
   closeDropdown();
   isLoading.value = true;
@@ -99,6 +101,8 @@ const toggleStatus = (
     snoozedUntil,
     classificationId,
     closingNote,
+    storeBranch,
+    quotationNumber,
   };
 
   if (customAttributes) {
@@ -121,17 +125,27 @@ const handleResolveWithAttributes = ({ attributes, context }) => {
       customAttributes: mergedAttributes,
       classificationId: currentChat.value.classification_id || null,
       closingNote: currentChat.value.closing_note || '',
+      storeBranch: currentChat.value.store || null,
+      quotationNumber: currentChat.value.quotation_number || '',
     });
   }
 };
 
-const handleResolutionSubmit = ({ context, classificationId, closingNote }) => {
+const handleResolutionSubmit = ({
+  context,
+  classificationId,
+  closingNote,
+  storeBranch,
+  quotationNumber,
+}) => {
   toggleStatus(
     wootConstants.STATUS_TYPE.RESOLVED,
     context.snoozedUntil,
     context.customAttributes || null,
     classificationId,
-    closingNote
+    closingNote,
+    storeBranch,
+    quotationNumber
   );
 };
 
@@ -161,6 +175,8 @@ const onCmdResolveConversation = () => {
       customAttributes: null,
       classificationId: currentChat.value.classification_id || null,
       closingNote: currentChat.value.closing_note || '',
+      storeBranch: currentChat.value.store || null,
+      quotationNumber: currentChat.value.quotation_number || '',
     });
   }
 };

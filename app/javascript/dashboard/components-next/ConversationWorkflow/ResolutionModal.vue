@@ -12,15 +12,34 @@ const dialogRef = ref(null);
 const conversationContext = ref(null);
 const classificationId = ref(null);
 const closingNote = ref('');
+const storeBranch = ref(null);
+const quotationNumber = ref('');
 const excludeClassificationNames = ref([]);
 const lockedClassificationId = ref(null);
 const didConfirm = ref(false);
+
+const STORE_OPTIONS = [
+  { value: 'matriz', labelKey: 'RESOLUTION_MODAL.STORE_OPTIONS.MATRIZ' },
+  { value: 'filial_cj', labelKey: 'RESOLUTION_MODAL.STORE_OPTIONS.FILIAL_CJ' },
+];
+
+const isQuotationInvalid = computed(
+  () => quotationNumber.value !== '' && !/^\d{1,6}$/.test(quotationNumber.value)
+);
+
+const onQuotationInput = e => {
+  const sanitized = e.target.value.replace(/\D/g, '').slice(0, 6);
+  quotationNumber.value = sanitized;
+};
 
 const classifications = computed(
   () => getters['conversationClassifications/getAll'].value
 );
 
-const currentAccount = computed(() => getters.getCurrentAccount.value);
+const currentAccountId = computed(() => getters.getCurrentAccountId.value);
+const currentAccount = computed(
+  () => getters['accounts/getAccount'].value(currentAccountId.value) || {}
+);
 
 const requireClassification = computed(
   () =>
@@ -45,6 +64,7 @@ const lockedClassificationLabel = computed(
 const isConfirmDisabled = computed(() => {
   if (requireClassification.value && !classificationId.value) return true;
   if (requireClosingNote.value && !closingNote.value.trim()) return true;
+  if (isQuotationInvalid.value) return true;
   return false;
 });
 
@@ -52,6 +72,8 @@ const open = context => {
   conversationContext.value = context;
   classificationId.value = context.classificationId || null;
   closingNote.value = context.closingNote || '';
+  storeBranch.value = context.storeBranch || null;
+  quotationNumber.value = context.quotationNumber || '';
   excludeClassificationNames.value = context.excludeClassificationNames || [];
   didConfirm.value = false;
 
@@ -74,6 +96,8 @@ const handleConfirm = () => {
     context: conversationContext.value,
     classificationId: classificationId.value,
     closingNote: closingNote.value,
+    storeBranch: storeBranch.value,
+    quotationNumber: quotationNumber.value || null,
   });
   dialogRef.value?.close();
 };
@@ -121,7 +145,7 @@ defineExpose({ open });
         <select
           v-else
           v-model="classificationId"
-          class="w-full px-3 py-2 text-sm border rounded-lg border-n-weak bg-n-alpha-1 text-n-slate-12 focus:outline-none focus:ring-2 focus:ring-n-brand"
+          class="w-full pl-3 pr-9 py-2 text-sm border rounded-lg border-n-weak bg-n-alpha-1 text-n-slate-12 focus:outline-none focus:ring-2 focus:ring-n-brand"
         >
           <option :value="null" disabled>
             {{ $t('RESOLUTION_MODAL.CLASSIFICATION.PLACEHOLDER') }}
@@ -153,6 +177,43 @@ defineExpose({ open });
           :placeholder="$t('RESOLUTION_MODAL.CLOSING_NOTE.PLACEHOLDER')"
           rows="3"
           class="w-full px-3 py-2 text-sm border rounded-lg border-n-weak bg-n-alpha-1 text-n-slate-12 placeholder-n-slate-9 focus:outline-none focus:ring-2 focus:ring-n-brand resize-none"
+        />
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label class="text-sm font-medium text-n-slate-12">
+          {{ $t('RESOLUTION_MODAL.STORE_LABEL') }}
+        </label>
+        <select
+          v-model="storeBranch"
+          class="w-full pl-3 pr-9 py-2 text-sm border rounded-lg border-n-weak bg-n-alpha-1 text-n-slate-12 focus:outline-none focus:ring-2 focus:ring-n-brand"
+        >
+          <option :value="null">
+            {{ $t('RESOLUTION_MODAL.STORE_PLACEHOLDER') }}
+          </option>
+          <option
+            v-for="option in STORE_OPTIONS"
+            :key="option.value"
+            :value="option.value"
+          >
+            {{ $t(option.labelKey) }}
+          </option>
+        </select>
+      </div>
+
+      <div class="flex flex-col gap-1">
+        <label class="text-sm font-medium text-n-slate-12">
+          {{ $t('RESOLUTION_MODAL.QUOTATION_NUMBER_LABEL') }}
+        </label>
+        <input
+          :value="quotationNumber"
+          type="text"
+          inputmode="numeric"
+          pattern="\d*"
+          maxlength="6"
+          :placeholder="$t('RESOLUTION_MODAL.QUOTATION_NUMBER_PLACEHOLDER')"
+          class="w-full px-3 py-2 text-sm border rounded-lg border-n-weak bg-n-alpha-1 text-n-slate-12 placeholder-n-slate-9 focus:outline-none focus:ring-2 focus:ring-n-brand"
+          @input="onQuotationInput"
         />
       </div>
     </div>

@@ -251,6 +251,8 @@ const actions = {
       customAttributes = null,
       classificationId = null,
       closingNote = null,
+      storeBranch = null,
+      quotationNumber = null,
     }
   ) => {
     try {
@@ -274,6 +276,8 @@ const actions = {
             classification_id: updatedClassificationId,
             closing_note: updatedClosingNote,
             classification: updatedClassification,
+            store: updatedStoreBranch,
+            quotation_number: updatedQuotationNumber,
           } = {},
         } = {},
       } = await ConversationApi.toggleStatus({
@@ -282,6 +286,8 @@ const actions = {
         snoozedUntil,
         classificationId,
         closingNote,
+        storeBranch,
+        quotationNumber,
       });
       commit(types.CHANGE_CONVERSATION_STATUS, {
         conversationId,
@@ -290,6 +296,8 @@ const actions = {
         classificationId: updatedClassificationId,
         closingNote: updatedClosingNote,
         classification: updatedClassification,
+        storeBranch: updatedStoreBranch,
+        quotationNumber: updatedQuotationNumber,
       });
     } catch (error) {
       // Handle error

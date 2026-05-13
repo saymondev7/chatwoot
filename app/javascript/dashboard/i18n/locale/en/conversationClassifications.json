@@ -49,6 +49,14 @@
     "CLOSING_NOTE": {
       "LABEL": "Closing note",
       "PLACEHOLDER": "Add a note about this conversation (optional)..."
-    }
+    },
+    "STORE_LABEL": "Store",
+    "STORE_PLACEHOLDER": "Select a store",
+    "STORE_OPTIONS": {
+      "MATRIZ": "Matriz",
+      "FILIAL_CJ": "Filial CJ"
+    },
+    "QUOTATION_NUMBER_LABEL": "Quote #",
+    "QUOTATION_NUMBER_PLACEHOLDER": "Up to 6 digits"
   }
 }
