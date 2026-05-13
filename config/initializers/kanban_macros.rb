@@ -4,15 +4,15 @@ Rails.application.config.to_prepare do
   Kanban::Macros::Actions::Registry.reset!
 
   trigger_classes = [
-    # Kanban::Macros::Triggers::LeadMessageReceived (PR3)
+    Kanban::Macros::Triggers::LeadMessageReceived
   ]
   condition_classes = [
-    # Kanban::Macros::Conditions::CardNotInColumnFunction (PR3)
-    # Kanban::Macros::Conditions::ConversationStatusIs (PR3)
-    # Kanban::Macros::Conditions::MessageSenderIsLead (PR3)
+    Kanban::Macros::Conditions::CardNotInColumnFunction,
+    Kanban::Macros::Conditions::ConversationStatusIs,
+    Kanban::Macros::Conditions::MessageSenderIsLead
   ]
   action_classes = [
-    # Kanban::Macros::Actions::MoveCardToColumnFunction (PR3)
+    Kanban::Macros::Actions::MoveCardToColumnFunction
   ]
 
   trigger_classes.each { |k| Kanban::Macros::Triggers::Registry.register(k) }
