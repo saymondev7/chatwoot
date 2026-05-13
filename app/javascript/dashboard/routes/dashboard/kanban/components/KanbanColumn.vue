@@ -89,6 +89,8 @@ async function handleResolutionSubmit({
   context,
   classificationId,
   closingNote,
+  storeBranch,
+  quotationNumber,
 }) {
   pendingMoveState.value = null;
   await store.dispatch('toggleStatus', {
@@ -96,6 +98,8 @@ async function handleResolutionSubmit({
     status: 'resolved',
     classificationId,
     closingNote,
+    storeBranch,
+    quotationNumber,
   });
 }
 

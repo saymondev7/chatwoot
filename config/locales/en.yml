@@ -237,6 +237,9 @@ en:
     attachment: 'Attachment'
     no_content: 'No content'
   conversations:
+    errors:
+      classification_required: 'Classification is required to resolve this conversation'
+      closing_note_required: 'Closing note is required to resolve this conversation'
     captain:
       handoff: 'Transferring to another agent for further assistance.'
     messages:

@@ -55,12 +55,16 @@ class ConversationApi extends ApiClient {
     snoozedUntil = null,
     classificationId = null,
     closingNote = null,
+    storeBranch = null,
+    quotationNumber = null,
   }) {
     return axios.post(`${this.url}/${conversationId}/toggle_status`, {
       status,
       snoozed_until: snoozedUntil,
       classification_id: classificationId,
       closing_note: closingNote,
+      store: storeBranch,
+      quotation_number: quotationNumber,
     });
   }
 

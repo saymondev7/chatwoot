@@ -287,6 +287,8 @@ async function handleResolutionSubmit({
   context,
   classificationId,
   closingNote,
+  storeBranch,
+  quotationNumber,
 }) {
   pendingColumnMove.value = null;
   await store.dispatch('kanban/moveCard', {
@@ -300,6 +302,8 @@ async function handleResolutionSubmit({
     status: 'resolved',
     classificationId,
     closingNote,
+    storeBranch,
+    quotationNumber,
   });
   closeModal();
 }

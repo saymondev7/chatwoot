@@ -49,6 +49,14 @@
     "CLOSING_NOTE": {
       "LABEL": "Observações",
       "PLACEHOLDER": "Adicione uma observação sobre esta conversa (opcional)..."
-    }
+    },
+    "STORE_LABEL": "Loja",
+    "STORE_PLACEHOLDER": "Selecione a loja",
+    "STORE_OPTIONS": {
+      "MATRIZ": "Matriz",
+      "FILIAL_CJ": "Filial CJ"
+    },
+    "QUOTATION_NUMBER_LABEL": "Nº Orçamento",
+    "QUOTATION_NUMBER_PLACEHOLDER": "Digite o número do orçamento"
   }
 }

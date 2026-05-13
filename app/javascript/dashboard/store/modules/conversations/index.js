@@ -158,6 +158,8 @@ export const mutations = {
       classificationId,
       closingNote,
       classification,
+      storeBranch,
+      quotationNumber,
     }
   ) {
     const conversation =
@@ -169,6 +171,9 @@ export const mutations = {
     if (closingNote !== undefined) conversation.closing_note = closingNote;
     if (classification !== undefined)
       conversation.classification = classification;
+    if (storeBranch !== undefined) conversation.store = storeBranch;
+    if (quotationNumber !== undefined)
+      conversation.quotation_number = quotationNumber;
   },
 
   [types.MUTE_CONVERSATION](_state) {

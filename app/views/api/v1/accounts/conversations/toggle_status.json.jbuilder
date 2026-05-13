@@ -8,6 +8,8 @@ json.payload do
   json.snoozed_until @conversation.snoozed_until
   json.classification_id @conversation.classification_id
   json.closing_note @conversation.closing_note
+  json.store @conversation.store
+  json.quotation_number @conversation.quotation_number
   if @conversation.classification.present?
     json.classification do
       json.id @conversation.classification.id

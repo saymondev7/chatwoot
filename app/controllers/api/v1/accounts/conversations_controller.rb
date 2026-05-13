@@ -83,11 +83,16 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     if pending_to_open_by_bot?
       @conversation.bot_handoff!
     elsif params[:status].present?
+      return unless validate_resolution_requirements!(resolving?)
+
       set_conversation_status
       set_closing_attributes if resolving?
       @status = @conversation.save!
     else
-      set_closing_attributes if @conversation.open?
+      will_resolve = @conversation.open?
+      return unless validate_resolution_requirements!(will_resolve)
+
+      set_closing_attributes if will_resolve
       @status = @conversation.toggle_status
     end
     assign_conversation if should_assign_conversation?
@@ -189,6 +194,24 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
   def set_closing_attributes
     @conversation.classification_id = params[:classification_id] if params.key?(:classification_id)
     @conversation.closing_note = params[:closing_note] if params.key?(:closing_note)
+    @conversation.store = params[:store] if params[:store].present?
+    @conversation.quotation_number = params[:quotation_number] if params.key?(:quotation_number)
+  end
+
+  def validate_resolution_requirements!(is_resolving)
+    return true unless is_resolving
+
+    if Current.account.require_classification_on_resolve && params[:classification_id].blank?
+      render json: { error: I18n.t('conversations.errors.classification_required') }, status: :unprocessable_entity
+      return false
+    end
+
+    if Current.account.require_closing_note_on_resolve && params[:closing_note].blank?
+      render json: { error: I18n.t('conversations.errors.closing_note_required') }, status: :unprocessable_entity
+      return false
+    end
+
+    true
   end
 
   def assign_conversation

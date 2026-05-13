@@ -15,8 +15,10 @@
 #  identifier             :string
 #  last_activity_at       :datetime         not null
 #  priority               :integer
+#  quotation_number       :string(6)
 #  snoozed_until          :datetime
 #  status                 :integer          default("open"), not null
+#  store                  :integer
 #  uuid                   :uuid             not null
 #  waiting_since          :datetime
 #  created_at             :datetime         not null
@@ -84,6 +86,9 @@ class Conversation < ApplicationRecord
 
   enum status: { open: 0, resolved: 1, pending: 2, snoozed: 3 }
   enum priority: { low: 0, medium: 1, high: 2, urgent: 3 }
+  enum store: { matriz: 0, filial_cj: 1 }, _prefix: true
+
+  validates :quotation_number, format: { with: /\A\d{1,6}\z/ }, allow_blank: true
 
   scope :unassigned, -> { where(assignee_id: nil) }
   scope :assigned, -> { where.not(assignee_id: nil) }
