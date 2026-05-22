@@ -1,10 +1,11 @@
 class Api::V1::Accounts::Kanban::CardsController < Api::V1::Accounts::BaseController
   before_action :find_board
   before_action :find_column, only: [:index, :create]
-  before_action :find_card, only: [:update, :move, :destroy]
+  before_action :find_card, only: [:update, :move, :destroy, :archive, :unarchive]
 
   def index
     @cards = @column.cards
+                    .active
                     .where(kanban_board: @board)
                     .includes(:contact, :created_by, :conversation)
                     .ordered_for_column(@column)
@@ -46,6 +47,25 @@ class Api::V1::Accounts::Kanban::CardsController < Api::V1::Accounts::BaseContro
     apply_card_move(target_column, from_column) if from_column.id != target_column.id
 
     render 'api/v1/accounts/kanban/cards/show'
+  end
+
+  def archive
+    authorize @card
+    @card.archive!
+    head :ok
+  end
+
+  def unarchive
+    authorize @card
+    @card.unarchive!
+    head :ok
+  end
+
+  def bulk_archive
+    authorize KanbanCard.new(kanban_board: @board), :bulk_archive?
+
+    count = bulk_archive_resolved_cards
+    render json: { archived_count: count }
   end
 
   def destroy
@@ -103,6 +123,18 @@ class Api::V1::Accounts::Kanban::CardsController < Api::V1::Accounts::BaseContro
         event_type: :stage_changed
       )
     end
+  end
+
+  def bulk_archive_resolved_cards
+    total = 0
+    @board.cards
+          .active
+          .joins(:conversation)
+          .where(conversations: { status: :resolved })
+          .in_batches(of: 500) do |batch|
+      total += batch.update_all(archived_at: Time.current)
+    end
+    total
   end
 
   def normalize_phone(phone)

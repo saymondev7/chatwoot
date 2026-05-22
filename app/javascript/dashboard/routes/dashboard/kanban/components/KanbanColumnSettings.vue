@@ -217,7 +217,7 @@ async function onReorder() {
               <!-- Linha 2: seletor de função -->
               <div class="px-2 pb-2 pl-8">
                 <select
-                  class="w-full text-xs rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2 py-1 text-slate-600 dark:text-slate-400 focus:outline-none focus:ring-1 focus:ring-woot-500"
+                  class="w-full text-xs rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 pl-2 pr-6 py-1 text-slate-600 dark:text-slate-400 focus:outline-none focus:ring-1 focus:ring-woot-500"
                   :value="col.column_function || 'no_function'"
                   @change="updateFunction(col, $event.target.value)"
                 >
@@ -226,6 +226,12 @@ async function onReorder() {
                   </option>
                   <option value="auto_receive">
                     {{ $t('KANBAN.SETTINGS.FUNCTION_AUTO_RECEIVE') }}
+                  </option>
+                  <option value="auto_won">
+                    {{ $t('KANBAN.SETTINGS.FUNCTION_AUTO_WON') }}
+                  </option>
+                  <option value="auto_lost">
+                    {{ $t('KANBAN.SETTINGS.FUNCTION_AUTO_LOST') }}
                   </option>
                 </select>
               </div>

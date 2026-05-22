@@ -305,6 +305,7 @@ async function handleResolutionSubmit({
     storeBranch,
     quotationNumber,
   });
+  store.dispatch('kanban/fetchBoard');
   closeModal();
 }
 

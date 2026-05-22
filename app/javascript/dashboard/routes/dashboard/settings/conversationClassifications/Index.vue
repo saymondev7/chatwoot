@@ -20,8 +20,10 @@ const { t } = useI18n();
 const route = useRoute();
 
 const newName = ref('');
+const newType = ref('standard');
 const editingId = ref(null);
 const editingName = ref('');
+const editingType = ref('standard');
 const loading = ref({});
 
 const classifications = computed(
@@ -47,17 +49,46 @@ const requireClosingNote = computed(
 
 const tableHeaders = computed(() => [
   t('CLASSIFICATION_SETTINGS.TABLE.NAME'),
+  t('CLASSIFICATION_SETTINGS.TABLE.RESULT'),
   t('CLASSIFICATION_SETTINGS.TABLE.ACTIONS'),
 ]);
+
+const typeOptions = computed(() => [
+  {
+    value: 'standard',
+    label: t('CLASSIFICATION_SETTINGS.FORM.RESULT_OPTIONS.STANDARD'),
+  },
+  { value: 'won', label: t('CLASSIFICATION_SETTINGS.FORM.RESULT_OPTIONS.WON') },
+  {
+    value: 'lost',
+    label: t('CLASSIFICATION_SETTINGS.FORM.RESULT_OPTIONS.LOST'),
+  },
+]);
+
+const typeBadgeClass = type => {
+  if (type === 'won') return 'bg-n-teal-2 text-n-teal-11';
+  if (type === 'lost') return 'bg-n-ruby-2 text-n-ruby-11';
+  return 'bg-n-slate-2 text-n-slate-10';
+};
+
+const typeLabel = type => {
+  if (type === 'won')
+    return t('CLASSIFICATION_SETTINGS.FORM.RESULT_OPTIONS.WON');
+  if (type === 'lost')
+    return t('CLASSIFICATION_SETTINGS.FORM.RESULT_OPTIONS.LOST');
+  return t('CLASSIFICATION_SETTINGS.FORM.RESULT_OPTIONS.STANDARD');
+};
 
 const addClassification = async () => {
   if (!newName.value.trim()) return;
   try {
     await store.dispatch('conversationClassifications/create', {
       name: newName.value.trim(),
+      classification_type: newType.value,
     });
     useAlert(t('CLASSIFICATION_SETTINGS.CREATE.SUCCESS'));
     newName.value = '';
+    newType.value = 'standard';
   } catch {
     useAlert(t('CLASSIFICATION_SETTINGS.CREATE.ERROR'));
   }
@@ -66,11 +97,13 @@ const addClassification = async () => {
 const startEdit = item => {
   editingId.value = item.id;
   editingName.value = item.name;
+  editingType.value = item.classification_type || 'standard';
 };
 
 const cancelEdit = () => {
   editingId.value = null;
   editingName.value = '';
+  editingType.value = 'standard';
 };
 
 const saveEdit = async id => {
@@ -79,6 +112,7 @@ const saveEdit = async id => {
     await store.dispatch('conversationClassifications/update', {
       id,
       name: editingName.value.trim(),
+      classification_type: editingType.value,
     });
     useAlert(t('CLASSIFICATION_SETTINGS.UPDATE.SUCCESS'));
     cancelEdit();
@@ -186,21 +220,37 @@ onBeforeMount(() => {
       </div>
 
       <!-- Add new classification -->
-      <div class="flex gap-2 mb-4">
-        <input
-          v-model="newName"
-          type="text"
-          :placeholder="$t('CLASSIFICATION_SETTINGS.FORM.PLACEHOLDER')"
-          class="flex-1 px-3 py-2 text-sm border rounded-lg border-n-weak bg-n-alpha-1 text-n-slate-12 placeholder-n-slate-9 focus:outline-none focus:ring-2 focus:ring-n-brand"
-          @keydown.enter="addClassification"
-        />
-        <Button
-          :label="$t('CLASSIFICATION_SETTINGS.FORM.ADD')"
-          size="sm"
-          :is-loading="uiFlags.isCreating"
-          :disabled="!newName.trim() || uiFlags.isCreating"
-          @click="addClassification"
-        />
+      <div class="flex flex-col gap-2 mb-4">
+        <div class="flex gap-2 items-center">
+          <input
+            v-model="newName"
+            type="text"
+            :placeholder="$t('CLASSIFICATION_SETTINGS.FORM.PLACEHOLDER')"
+            class="flex-1 min-w-0 px-3 py-2 text-sm border rounded-lg border-n-weak bg-n-alpha-1 text-n-slate-12 placeholder-n-slate-9 focus:outline-none focus:ring-2 focus:ring-n-brand"
+            @keydown.enter="addClassification"
+          />
+          <select
+            v-model="newType"
+            v-tooltip.top="$t('CLASSIFICATION_SETTINGS.FORM.RESULT_HINT')"
+            class="shrink-0 w-36 pl-3 pr-8 py-2 text-sm border rounded-lg border-n-weak bg-n-alpha-1 text-n-slate-12 focus:outline-none focus:ring-2 focus:ring-n-brand"
+          >
+            <option
+              v-for="opt in typeOptions"
+              :key="opt.value"
+              :value="opt.value"
+            >
+              {{ opt.label }}
+            </option>
+          </select>
+          <Button
+            :label="$t('CLASSIFICATION_SETTINGS.FORM.ADD')"
+            size="sm"
+            class="shrink-0"
+            :is-loading="uiFlags.isCreating"
+            :disabled="!newName.trim() || uiFlags.isCreating"
+            @click="addClassification"
+          />
+        </div>
       </div>
 
       <!-- Classifications table -->
@@ -234,6 +284,29 @@ onBeforeMount(() => {
                 </div>
                 <span v-else class="text-body-main text-n-slate-12">
                   {{ item.name }}
+                </span>
+              </BaseTableCell>
+
+              <BaseTableCell>
+                <select
+                  v-if="editingId === item.id"
+                  v-model="editingType"
+                  class="px-2 py-1 text-sm border rounded border-n-weak bg-n-alpha-1 text-n-slate-12 focus:outline-none focus:ring-1 focus:ring-n-brand"
+                >
+                  <option
+                    v-for="opt in typeOptions"
+                    :key="opt.value"
+                    :value="opt.value"
+                  >
+                    {{ opt.label }}
+                  </option>
+                </select>
+                <span
+                  v-else
+                  class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                  :class="typeBadgeClass(item.classification_type)"
+                >
+                  {{ typeLabel(item.classification_type) }}
                 </span>
               </BaseTableCell>
 

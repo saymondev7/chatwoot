@@ -12,6 +12,7 @@ json.created_at card.created_at&.iso8601
 json.conversation do
   if card.conversation
     json.id card.conversation.id
+    json.display_id card.conversation.display_id
     json.created_at card.conversation.created_at&.iso8601
   else
     json.null!

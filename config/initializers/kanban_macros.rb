@@ -4,7 +4,8 @@ Rails.application.config.to_prepare do
   Kanban::Macros::Actions::Registry.reset!
 
   trigger_classes = [
-    Kanban::Macros::Triggers::LeadMessageReceived
+    Kanban::Macros::Triggers::LeadMessageReceived,
+    Kanban::Macros::Triggers::ConversationReopened
   ]
   condition_classes = [
     Kanban::Macros::Conditions::CardNotInColumnFunction,

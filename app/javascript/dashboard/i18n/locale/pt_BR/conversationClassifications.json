@@ -12,10 +12,18 @@
     },
     "FORM": {
       "PLACEHOLDER": "Nome da nova classificação...",
-      "ADD": "Adicionar"
+      "ADD": "Adicionar",
+      "RESULT_LABEL": "Resultado",
+      "RESULT_HINT": "Define o que esta classificação representa no kanban: uma venda ganha, um encerramento sem venda, ou apenas uma etiqueta.",
+      "RESULT_OPTIONS": {
+        "STANDARD": "Padrão",
+        "WON": "Venda ganha",
+        "LOST": "Encerrado sem venda"
+      }
     },
     "TABLE": {
       "NAME": "Nome",
+      "RESULT": "Resultado",
       "ACTIONS": "Ações",
       "EDIT": "Editar",
       "DELETE": "Excluir"

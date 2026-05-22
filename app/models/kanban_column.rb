@@ -16,7 +16,9 @@
 #
 #  index_kanban_columns_on_account_id                      (account_id)
 #  index_kanban_columns_on_account_id_and_position         (account_id,position)
+#  index_kanban_columns_on_account_id_auto_lost_unique     (account_id) UNIQUE WHERE (column_function = 3)
 #  index_kanban_columns_on_account_id_auto_receive_unique  (account_id) UNIQUE WHERE (column_function = 1)
+#  index_kanban_columns_on_account_id_auto_won_unique      (account_id) UNIQUE WHERE (column_function = 2)
 #
 # Foreign Keys
 #
@@ -26,9 +28,11 @@ class KanbanColumn < ApplicationRecord
   belongs_to :account
 
   enum :column_type, { standard: 0, won: 1, lost: 2 }
-  enum :column_function, { no_function: 0, auto_receive: 1 }
+  enum :column_function, { no_function: 0, auto_receive: 1, auto_won: 2, auto_lost: 3 }
 
   validate :unique_auto_receive_per_account, if: :auto_receive?
+  validate :unique_auto_won_per_account, if: :auto_won?
+  validate :unique_auto_lost_per_account, if: :auto_lost?
 
   def self.auto_receive_for(account)
     where(account: account, column_function: :auto_receive).first
@@ -56,6 +60,20 @@ class KanbanColumn < ApplicationRecord
 
   def unique_auto_receive_per_account
     return unless account.kanban_columns.auto_receive.where.not(id: id).exists?
+
+    errors.add(:column_function, I18n.t('errors.kanban.column.function.taken',
+                                        default: 'another column already has this function'))
+  end
+
+  def unique_auto_won_per_account
+    return unless account.kanban_columns.auto_won.where.not(id: id).exists?
+
+    errors.add(:column_function, I18n.t('errors.kanban.column.function.taken',
+                                        default: 'another column already has this function'))
+  end
+
+  def unique_auto_lost_per_account
+    return unless account.kanban_columns.auto_lost.where.not(id: id).exists?
 
     errors.add(:column_function, I18n.t('errors.kanban.column.function.taken',
                                         default: 'another column already has this function'))

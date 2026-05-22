@@ -67,6 +67,9 @@ en:
     kanban:
       card:
         contact_belongs_to_other_consultant: "This contact already belongs to another consultant's portfolio"
+      macros:
+        system_macro_cannot_be_deleted: "System macros cannot be deleted. You can disable them instead."
+        restore_only_for_system_macros: "Only system macros can be restored to their default configuration."
     assignment_policy:
       not_found: Assignment policy not found
     attachments:

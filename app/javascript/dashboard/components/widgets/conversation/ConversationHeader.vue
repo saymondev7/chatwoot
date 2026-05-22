@@ -119,9 +119,15 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
       >
         <div class="flex flex-row items-center max-w-full gap-1 p-0 m-0">
           <span
-            class="text-sm font-medium truncate leading-tight text-n-slate-12"
+            class="min-w-0 text-sm font-medium truncate leading-tight text-n-slate-12"
           >
             {{ currentContact.name }}
+          </span>
+          <span
+            v-if="currentChat.id"
+            class="text-sm text-n-slate-10 ml-2 flex-shrink-0"
+          >
+            #{{ currentChat.id }}
           </span>
           <fluent-icon
             v-if="!isHMACVerified"

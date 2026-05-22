@@ -39,6 +39,7 @@ import integrations from './modules/integrations';
 import labels from './modules/labels';
 import conversationClassifications from './modules/conversationClassifications';
 import kanban from './modules/kanban';
+import kanbanMacros from './modules/kanbanMacros';
 import macros from './modules/macros';
 import notifications from './modules/notifications';
 import portals from './modules/helpCenterPortals';
@@ -104,6 +105,7 @@ export default createStore({
     labels,
     conversationClassifications,
     kanban,
+    kanbanMacros,
     macros,
     notifications,
     portals,

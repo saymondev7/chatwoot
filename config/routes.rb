@@ -257,8 +257,21 @@ Rails.application.routes.draw do
             resources :cards, only: [:update, :destroy] do
               member do
                 patch :move
+                post :archive
+                delete :archive, action: :unarchive
+              end
+              collection do
+                post :bulk_archive
               end
               resources :card_schedules, only: [:index, :create, :destroy]
+            end
+            resources :macros do
+              collection do
+                get :schema
+              end
+              member do
+                post :restore
+              end
             end
           end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_12_224646) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_17_000002) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -1013,6 +1013,8 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_12_224646) do
     t.datetime "updated_at", null: false
     t.bigint "conversation_id"
     t.datetime "entered_stage_at", null: false
+    t.datetime "archived_at"
+    t.index ["archived_at"], name: "index_kanban_cards_on_archived_at"
     t.index ["contact_id"], name: "index_kanban_cards_on_contact_id"
     t.index ["conversation_id"], name: "index_kanban_cards_on_conversation_id"
     t.index ["conversation_id"], name: "index_kanban_cards_on_conversation_id_unique", unique: true, where: "(conversation_id IS NOT NULL)"
@@ -1034,7 +1036,9 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_12_224646) do
     t.integer "column_function", default: 0, null: false
     t.index ["account_id", "position"], name: "index_kanban_columns_on_account_id_and_position"
     t.index ["account_id"], name: "index_kanban_columns_on_account_id"
+    t.index ["account_id"], name: "index_kanban_columns_on_account_id_auto_lost_unique", unique: true, where: "(column_function = 3)"
     t.index ["account_id"], name: "index_kanban_columns_on_account_id_auto_receive_unique", unique: true, where: "(column_function = 1)"
+    t.index ["account_id"], name: "index_kanban_columns_on_account_id_auto_won_unique", unique: true, where: "(column_function = 2)"
   end
 
   create_table "kanban_macros", force: :cascade do |t|

@@ -333,6 +333,7 @@
     "APPLICATIONS": "Applications",
     "LABELS": "Labels",
     "CONVERSATION_CLASSIFICATIONS": "Closing Classifications",
+    "KANBAN_MACROS": "Kanban Macros",
     "CUSTOM_ATTRIBUTES": "Custom Attributes",
     "AUTOMATION": "Automation",
     "MACROS": "Macros",

@@ -665,6 +665,12 @@ const menuItems = computed(() => {
           to: accountScopedRoute('conversation_classifications_list'),
         },
         {
+          name: 'Settings Kanban Macros',
+          label: t('SIDEBAR.KANBAN_MACROS'),
+          icon: 'i-lucide-zap',
+          to: accountScopedRoute('kanban_macros_list'),
+        },
+        {
           name: 'Settings Custom Attributes',
           label: t('SIDEBAR.CUSTOM_ATTRIBUTES'),
           icon: 'i-lucide-code',
