@@ -12,6 +12,8 @@
       "COLOR": "Cor da coluna",
       "FUNCTION_NONE": "Sem automação",
       "FUNCTION_AUTO_RECEIVE": "Receber leads atribuídos",
+      "FUNCTION_AUTO_WON": "Venda ganha automática",
+      "FUNCTION_AUTO_LOST": "Encerrada sem venda automática",
       "FUNCTION_ERROR": "Não foi possível atualizar a função da coluna. Tente novamente.",
       "CREATE_ERROR": "Não foi possível criar a coluna. Tente novamente.",
       "UPDATE_ERROR": "Não foi possível atualizar a coluna. Tente novamente."
@@ -94,6 +96,53 @@
       "SUBMIT": "Adicionar ao board",
       "ERROR_PHONE_OR_EMAIL": "Telefone ou e-mail são obrigatórios.",
       "ERROR_GENERIC": "Não foi possível adicionar o cliente. Tente novamente."
+    }
+  },
+  "KANBAN_MACROS": {
+    "TITLE": "Macros do Kanban",
+    "SUBTITLE": "Configure regras automáticas para seus quadros kanban",
+    "LOADING": "Carregando...",
+    "ERROR": "Falha ao carregar macros",
+    "NEW_MACRO": "Novo macro",
+    "EDIT": "Editar",
+    "DELETE": "Excluir",
+    "DELETE_CONFIRM": "Tem certeza que deseja excluir este macro? Essa ação não pode ser desfeita.",
+    "DELETE_SYSTEM_FORBIDDEN": "Macros do sistema não podem ser excluídos, mas podem ser desabilitados.",
+    "SYSTEM_BADGE": "Sistema",
+    "ENABLED": "Ativada",
+    "EMPTY_STATE": "Nenhuma macro cadastrada",
+    "EMPTY_CTA": "Criar primeira macro",
+    "NAME": "Nome",
+    "DESCRIPTION": "Descrição",
+    "FORM": {
+      "NEW_TITLE": "Nova macro",
+      "EDIT_TITLE": "Editar macro",
+      "NAME_LABEL": "Nome",
+      "NAME_PLACEHOLDER": "Nome da macro",
+      "DESCRIPTION_LABEL": "Descrição",
+      "SAVE": "Salvar",
+      "CANCEL": "Cancelar",
+      "RESTORE_DEFAULT": "Restaurar padrão",
+      "RESTORE_CONFIRM": "Isso vai sobrescrever os gatilhos, condições e ações com a versão padrão original. Continuar?",
+      "VALIDATION": {
+        "NAME_REQUIRED": "Nome é obrigatório",
+        "AT_LEAST_ONE_TRIGGER": "Adicione ao menos um gatilho",
+        "AT_LEAST_ONE_ACTION": "Adicione ao menos uma ação"
+      }
+    },
+    "BUILDER": {
+      "WHEN": "Quando",
+      "IF": "Se",
+      "THEN": "Então",
+      "ADD_TRIGGER": "Adicionar gatilho",
+      "ADD_CONDITION": "Adicionar condição",
+      "ADD_ACTION": "Adicionar ação",
+      "EMPTY_TRIGGERS": "Nenhum gatilho adicionado",
+      "EMPTY_CONDITIONS": "Nenhuma condição adicionada",
+      "EMPTY_ACTIONS": "Nenhuma ação adicionada"
+    },
+    "ITEM": {
+      "REMOVE": "Remover"
     }
   }
 }

@@ -71,6 +71,39 @@ class KanbanAPI extends ApiClient {
       `${this.url}/cards/${cardId}/card_schedules/${scheduleId}`
     );
   }
+
+  // Macros
+  fetchMacros() {
+    return axios.get(`${this.url}/macros`);
+  }
+
+  fetchSchema() {
+    return axios.get(`${this.url}/macros/schema`);
+  }
+
+  showMacro(id) {
+    return axios.get(`${this.url}/macros/${id}`);
+  }
+
+  createMacro(params) {
+    return axios.post(`${this.url}/macros`, { macro: params });
+  }
+
+  updateMacro(id, params) {
+    return axios.patch(`${this.url}/macros/${id}`, { macro: params });
+  }
+
+  deleteMacro(id) {
+    return axios.delete(`${this.url}/macros/${id}`);
+  }
+
+  restoreMacro(id) {
+    return axios.post(`${this.url}/macros/${id}/restore`);
+  }
+
+  toggleMacroEnabled(id, enabled) {
+    return axios.patch(`${this.url}/macros/${id}`, { macro: { enabled } });
+  }
 }
 
 export default new KanbanAPI();

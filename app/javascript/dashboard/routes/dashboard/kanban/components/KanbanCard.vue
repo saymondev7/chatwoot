@@ -60,6 +60,12 @@ const formattedValue = computed(() => {
           >
             {{ card.contact.phone_number }}
           </p>
+          <p
+            v-if="card.conversation?.display_id"
+            class="text-xs text-n-slate-9"
+          >
+            #{{ card.conversation.display_id }}
+          </p>
         </div>
       </div>
 

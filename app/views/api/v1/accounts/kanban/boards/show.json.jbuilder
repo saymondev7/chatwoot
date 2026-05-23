@@ -3,6 +3,7 @@ json.user_id @board.user_id
 json.account_id @board.account_id
 
 board_cards_by_column = @board.cards
+                              .active
                               .includes(:contact,
                                         :conversation,
                                         { activities: [:user, :from_column, :to_column] },

@@ -74,7 +74,10 @@ async function openResolutionIfNeeded(card, originalColumnId) {
   const openConversation = conversations.find(c => c.status === 'open');
   if (!openConversation) return;
 
-  pendingMoveState.value = { card, originalColumnId };
+  pendingMoveState.value = {
+    card: { ...card, kanban_column_id: props.column.id },
+    originalColumnId,
+  };
 
   resolutionModalRef.value?.open({
     conversationId: openConversation.id,
@@ -101,6 +104,7 @@ async function handleResolutionSubmit({
     storeBranch,
     quotationNumber,
   });
+  store.dispatch('kanban/fetchBoard');
 }
 
 async function handleResolutionCancel() {

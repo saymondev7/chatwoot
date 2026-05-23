@@ -12,6 +12,8 @@
       "COLOR": "Column color",
       "FUNCTION_NONE": "No automation",
       "FUNCTION_AUTO_RECEIVE": "Receive assigned leads",
+      "FUNCTION_AUTO_WON": "Auto-win column",
+      "FUNCTION_AUTO_LOST": "Auto-lost column",
       "FUNCTION_ERROR": "Could not update column function. Please try again.",
       "CREATE_ERROR": "Could not create column. Please try again.",
       "UPDATE_ERROR": "Could not update column. Please try again."
@@ -101,6 +103,53 @@
       "SUBMIT": "Add to board",
       "ERROR_PHONE_OR_EMAIL": "Phone number or email is required.",
       "ERROR_GENERIC": "Could not add client. Please try again."
+    }
+  },
+  "KANBAN_MACROS": {
+    "TITLE": "Kanban Macros",
+    "SUBTITLE": "Configure automated rules for your kanban boards",
+    "LOADING": "Loading...",
+    "ERROR": "Failed to load macros",
+    "NEW_MACRO": "New macro",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "DELETE_CONFIRM": "Are you sure you want to delete this macro? This cannot be undone.",
+    "DELETE_SYSTEM_FORBIDDEN": "System macros cannot be deleted, but you can disable them.",
+    "SYSTEM_BADGE": "System",
+    "ENABLED": "Enabled",
+    "EMPTY_STATE": "No macros yet",
+    "EMPTY_CTA": "Create your first macro",
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "FORM": {
+      "NEW_TITLE": "New macro",
+      "EDIT_TITLE": "Edit macro",
+      "NAME_LABEL": "Name",
+      "NAME_PLACEHOLDER": "Macro name",
+      "DESCRIPTION_LABEL": "Description",
+      "SAVE": "Save",
+      "CANCEL": "Cancel",
+      "RESTORE_DEFAULT": "Restore default",
+      "RESTORE_CONFIRM": "This will overwrite the triggers, conditions and actions with the original default version. Continue?",
+      "VALIDATION": {
+        "NAME_REQUIRED": "Name is required",
+        "AT_LEAST_ONE_TRIGGER": "Add at least one trigger",
+        "AT_LEAST_ONE_ACTION": "Add at least one action"
+      }
+    },
+    "BUILDER": {
+      "WHEN": "When",
+      "IF": "If",
+      "THEN": "Then",
+      "ADD_TRIGGER": "Add trigger",
+      "ADD_CONDITION": "Add condition",
+      "ADD_ACTION": "Add action",
+      "EMPTY_TRIGGERS": "No triggers added",
+      "EMPTY_CONDITIONS": "No conditions added",
+      "EMPTY_ACTIONS": "No actions added"
+    },
+    "ITEM": {
+      "REMOVE": "Remove"
     }
   }
 }

@@ -15,6 +15,18 @@ class KanbanCardPolicy < ApplicationPolicy
     record.kanban_board.user_id == user.id
   end
 
+  def archive?
+    record.kanban_board.user_id == user.id
+  end
+
+  def unarchive?
+    record.kanban_board.user_id == user.id
+  end
+
+  def bulk_archive?
+    record.kanban_board.user_id == user.id
+  end
+
   def destroy?
     record.kanban_board.user_id == user.id
   end

@@ -12,10 +12,18 @@
     },
     "FORM": {
       "PLACEHOLDER": "New classification name...",
-      "ADD": "Add"
+      "ADD": "Add",
+      "RESULT_LABEL": "Result",
+      "RESULT_HINT": "Defines what this classification represents in the kanban: a won deal, a closure without sale, or just a label.",
+      "RESULT_OPTIONS": {
+        "STANDARD": "Default",
+        "WON": "Won deal",
+        "LOST": "Closed without sale"
+      }
     },
     "TABLE": {
       "NAME": "Name",
+      "RESULT": "Result",
       "ACTIONS": "Actions",
       "EDIT": "Edit",
       "DELETE": "Delete"

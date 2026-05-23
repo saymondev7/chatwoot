@@ -3,6 +3,7 @@
 # Table name: kanban_cards
 #
 #  id               :bigint           not null, primary key
+#  archived_at      :datetime
 #  entered_stage_at :datetime         not null
 #  notes            :text
 #  position         :float            default(1.0), not null
@@ -17,6 +18,7 @@
 #
 # Indexes
 #
+#  index_kanban_cards_on_archived_at                    (archived_at)
 #  index_kanban_cards_on_column_and_entered_stage_at    (kanban_column_id,entered_stage_at)
 #  index_kanban_cards_on_contact_id                     (contact_id)
 #  index_kanban_cards_on_conversation_id                (conversation_id)
@@ -43,6 +45,17 @@ class KanbanCard < ApplicationRecord
 
   has_many :activities, class_name: 'KanbanCardActivity', dependent: :destroy
   has_many :schedules, class_name: 'KanbanCardSchedule', dependent: :destroy
+
+  scope :active, -> { where(archived_at: nil) }
+  scope :archived, -> { where.not(archived_at: nil) }
+
+  def archive!
+    update!(archived_at: Time.current)
+  end
+
+  def unarchive!
+    update!(archived_at: nil)
+  end
 
   # DEPRECATED: ordering is now deterministic via `entered_stage_at` (or
   # `conversation.created_at` for auto_receive columns). The `position` field

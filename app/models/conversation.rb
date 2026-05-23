@@ -125,10 +125,13 @@ class Conversation < ApplicationRecord
   has_many :mentions, dependent: :destroy_async
   has_many :messages, dependent: :destroy_async, autosave: true
   has_one :csat_survey_response, dependent: :destroy_async
+  has_one :kanban_card, dependent: :nullify
   has_many :conversation_participants, dependent: :destroy_async
   has_many :notifications, as: :primary_actor, dependent: :destroy_async
   has_many :attachments, through: :messages
   has_many :reporting_events, dependent: :destroy_async
+
+  KANBAN_CLOSURE_CANCELLATION_WINDOW = 5.minutes
 
   before_save :ensure_snooze_until_reset
   before_create :determine_conversation_status
@@ -136,6 +139,7 @@ class Conversation < ApplicationRecord
 
   after_update_commit :execute_after_update_commit_callbacks
   after_update_commit :sync_kanban_card
+  after_update_commit :handle_kanban_status_transitions
   after_create_commit :notify_conversation_creation
   after_create_commit :load_attributes_created_by_db_triggers
   after_create_commit :sync_kanban_card_on_create
@@ -248,11 +252,92 @@ class Conversation < ApplicationRecord
   end
 
   def sync_kanban_card
-    return unless saved_change_to_assignee_id? ||
-                  saved_change_to_status? ||
-                  saved_change_to_classification_id?
+    return unless saved_change_to_assignee_id?
 
-    Kanban::CardSyncService.new(conversation: self).sync
+    Kanban::CardSyncService.new(conversation: self).sync_to_assignee
+  end
+
+  def handle_kanban_status_transitions
+    return unless saved_change_to_status?
+
+    before, after = saved_change_to_status
+
+    if before != 'resolved' && after == 'resolved'
+      record_kanban_closure
+      Kanban::CardSyncService.new(conversation: self).sync_on_resolution
+    elsif before == 'resolved' && after == 'open'
+      record_kanban_reopening_if_recent
+    end
+  end
+
+  def record_kanban_closure
+    card = kanban_card
+    return unless card
+
+    KanbanCardActivity.create!(
+      kanban_card: card,
+      from_column: nil,
+      to_column: nil,
+      user: Current.user,
+      source: Current.user.present? ? :manual : :system,
+      event_type: :conversation_closed,
+      metadata: build_closure_metadata
+    )
+  end
+
+  def build_closure_metadata
+    return {} unless classification
+
+    {
+      classification_id: classification.id,
+      classification_name: classification.name,
+      classification_type: classification.classification_type
+    }
+  end
+
+  def record_kanban_reopening_if_recent
+    card = kanban_card
+    return unless card
+
+    recent_closure = card.activities
+                         .where(event_type: :conversation_closed)
+                         .where('created_at > ?', KANBAN_CLOSURE_CANCELLATION_WINDOW.ago)
+                         .order(created_at: :desc)
+                         .first
+
+    reason = if recent_closure && has_recent_incoming_message?
+               'new_message_received'
+             elsif recent_closure
+               'manual_reopen_within_window'
+             else
+               'manual_reopen'
+             end
+
+    KanbanCardActivity.create!(
+      kanban_card: card,
+      from_column: nil,
+      to_column: nil,
+      user: nil,
+      source: :system,
+      event_type: :closure_cancelled,
+      metadata: {
+        original_classification_id: recent_closure&.metadata&.dig('classification_id'),
+        reason: reason
+      }
+    )
+
+    card.unarchive!
+
+    Kanban::Macros::EvaluateJob.perform_later(
+      event_type: 'conversation_reopened',
+      payload: { conversation_id: id }
+    )
+  end
+
+  def has_recent_incoming_message?
+    messages.where(message_type: :incoming)
+            .where('created_at > ?', KANBAN_CLOSURE_CANCELLATION_WINDOW.ago)
+            .exists?
   end
 
   def handle_resolved_status_change

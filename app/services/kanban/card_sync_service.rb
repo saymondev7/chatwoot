@@ -7,17 +7,7 @@ class Kanban::CardSyncService
     @account = conversation.account
   end
 
-  # Single entry point. Order matters when status AND assignee both change:
-  # 1) sync_to_assignee moves card to the new assignee's board
-  # 2) move_to_resolution_column then moves to won/lost within that new board
-  # When assignee is nil and conversation is not resolved, card stays put.
-  def sync
-    sync_to_assignee if @conversation.assignee.present?
-    move_to_resolution_column if @conversation.resolved? && resolution_classification_type
-  end
-
-  private
-
+  # Called when assignee changes. Moves card to the new assignee's board.
   def sync_to_assignee
     assignee = @conversation.assignee
     return if skip_assignee?(assignee)
@@ -40,30 +30,33 @@ class Kanban::CardSyncService
     end
   end
 
-  def create_card_for_assignee(assignee, board, column)
-    KanbanCard.create!(
-      conversation: @conversation,
-      contact: @contact,
-      kanban_board: board,
-      kanban_column: column,
-      created_by: assignee,
-      position: KanbanCard.next_position(column.id, board.id)
-    )
-  end
-
-  # Move when board changes OR when card is stuck in won/lost but conversation
-  # is no longer resolved (reopen scenario).
-  def needs_resync?(card, target_board)
-    card.kanban_board_id != target_board.id ||
-      (!@conversation.resolved? && card.kanban_column.column_type.in?(%w[won lost]))
-  end
-
-  def move_to_resolution_column
+  # Called when conversation transitions to resolved.
+  # Moves card to auto_won/auto_lost column (if configured), then archives it.
+  def sync_on_resolution
     card = KanbanCard.find_by(conversation_id: @conversation.id)
     return unless card
 
-    target_column = @account.kanban_columns.find_by(column_type: resolution_classification_type)
-    return unless target_column
+    target_function = resolution_target_function
+    if target_function
+      target_column = @account.kanban_columns.find_by(column_function: target_function)
+      if target_column
+        move_card_to_column(card, target_column)
+      else
+        Rails.logger.warn("[KanbanCardSyncService] No #{target_function} column for account #{@account.id}, skipping move")
+      end
+    end
+
+    card.archive!
+  end
+
+  # Legacy entry point used by create callback (on assignee present).
+  def sync
+    sync_to_assignee if @conversation.assignee.present?
+  end
+
+  private
+
+  def move_card_to_column(card, target_column)
     return if card.kanban_column_id == target_column.id
 
     from_column = card.kanban_column
@@ -75,27 +68,38 @@ class Kanban::CardSyncService
           position: KanbanCard.next_position(target_column.id, card.kanban_board_id)
         )
       end
-      log_resolution_activity(card, from_column, target_column)
+      KanbanCardActivity.create!(
+        kanban_card: card,
+        from_column: from_column,
+        to_column: target_column,
+        user: nil,
+        source: :system,
+        event_type: :stage_changed,
+        metadata: { trigger: 'conversation_resolved' }
+      )
     end
   end
 
-  def log_resolution_activity(card, from_column, to_column)
-    KanbanCardActivity.create!(
-      kanban_card: card,
-      from_column: from_column,
-      to_column: to_column,
-      user: nil,
-      source: :system,
-      event_type: :stage_changed,
-      metadata: { trigger: 'conversation_resolved' }
+  def create_card_for_assignee(assignee, board, column)
+    KanbanCard.create!(
+      conversation: @conversation,
+      contact: @contact,
+      kanban_board: board,
+      kanban_column: column,
+      created_by: assignee,
+      position: KanbanCard.next_position(column.id, board.id)
     )
   end
 
-  def resolution_classification_type
+  def needs_resync?(card, target_board)
+    card.kanban_board_id != target_board.id
+  end
+
+  def resolution_target_function
     classification = @conversation.classification
     return nil unless classification
-    return :won if classification.won?
-    return :lost if classification.lost?
+    return :auto_won if classification.won?
+    return :auto_lost if classification.lost?
 
     nil
   end
