@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_17_000002) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_24_000001) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -1036,6 +1036,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_17_000002) do
     t.integer "column_function", default: 0, null: false
     t.index ["account_id", "position"], name: "index_kanban_columns_on_account_id_and_position"
     t.index ["account_id"], name: "index_kanban_columns_on_account_id"
+    t.index ["account_id"], name: "index_kanban_columns_on_account_id_auto_active_unique", unique: true, where: "(column_function = 4)"
     t.index ["account_id"], name: "index_kanban_columns_on_account_id_auto_lost_unique", unique: true, where: "(column_function = 3)"
     t.index ["account_id"], name: "index_kanban_columns_on_account_id_auto_receive_unique", unique: true, where: "(column_function = 1)"
     t.index ["account_id"], name: "index_kanban_columns_on_account_id_auto_won_unique", unique: true, where: "(column_function = 2)"

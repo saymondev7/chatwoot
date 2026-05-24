@@ -24,4 +24,17 @@ class Kanban::Macros::Triggers::Base
   def matches?(_event)
     raise NotImplementedError
   end
+
+  private
+
+  # Resolves the KanbanCard associated with the event, mirroring Engine#resolve_card.
+  # Triggers that need to guard on card state use this helper.
+  def card_for(event)
+    return event.card if event.payload[:card_id]
+
+    conv_id = event.payload[:conversation_id]
+    return nil unless conv_id
+
+    KanbanCard.find_by(conversation_id: conv_id)
+  end
 end

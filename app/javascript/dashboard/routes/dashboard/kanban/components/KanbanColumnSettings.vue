@@ -233,6 +233,9 @@ async function onReorder() {
                   <option value="auto_lost">
                     {{ $t('KANBAN.SETTINGS.FUNCTION_AUTO_LOST') }}
                   </option>
+                  <option value="auto_active">
+                    {{ $t('KANBAN.SETTINGS.FUNCTION_AUTO_ACTIVE') }}
+                  </option>
                 </select>
               </div>
             </div>

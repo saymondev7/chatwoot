@@ -14,6 +14,7 @@
       "FUNCTION_AUTO_RECEIVE": "Receive assigned leads",
       "FUNCTION_AUTO_WON": "Auto-win column",
       "FUNCTION_AUTO_LOST": "Auto-lost column",
+      "FUNCTION_AUTO_ACTIVE": "Active attendance",
       "FUNCTION_ERROR": "Could not update column function. Please try again.",
       "CREATE_ERROR": "Could not create column. Please try again.",
       "UPDATE_ERROR": "Could not update column. Please try again."

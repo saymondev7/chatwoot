@@ -5,7 +5,8 @@ Rails.application.config.to_prepare do
 
   trigger_classes = [
     Kanban::Macros::Triggers::LeadMessageReceived,
-    Kanban::Macros::Triggers::ConversationReopened
+    Kanban::Macros::Triggers::ConversationReopened,
+    Kanban::Macros::Triggers::MessageReceivedFromTeam
   ]
   condition_classes = [
     Kanban::Macros::Conditions::CardNotInColumnFunction,
