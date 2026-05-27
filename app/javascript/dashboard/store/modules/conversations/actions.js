@@ -352,7 +352,9 @@ const actions = {
         canReply: true,
       });
       commit(types.ADD_CONVERSATION_ATTACHMENTS, message);
-      // Custom (PR8): notify kanban badge to increment for this conversation
+      // Custom (PR8): emite evento pro badge de não lidas do kanban.
+      // Chatwoot não expõe um BUS_EVENT genérico de "nova mensagem via ActionCable",
+      // então emitimos aqui. Ref: docs/kanban-feature/10-unread-message-badge.md
       if (!message.private) {
         emitter.emit(
           BUS_EVENTS.KANBAN_UNREAD_INCREMENT,
