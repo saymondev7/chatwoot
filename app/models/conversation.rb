@@ -198,6 +198,12 @@ class Conversation < ApplicationRecord
     unread_messages.where(account_id: account_id).incoming.last(10)
   end
 
+  # Custom: adicionado pelo fork pra o badge de mensagens não lidas no kanban (PR8)
+  # Ref: docs/kanban-feature/10-unread-message-badge.md
+  def assignee_unread_incoming_messages
+    assignee_unread_messages.where(account_id: account_id).incoming
+  end
+
   def cached_label_list_array
     (cached_label_list || '').split(',').map(&:strip)
   end

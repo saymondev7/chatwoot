@@ -1,8 +1,10 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useAdmin } from 'dashboard/composables/useAdmin';
 import { onBeforeRouteLeave, useRoute } from 'vue-router';
+import { emitter } from 'shared/helpers/mitt';
+import { BUS_EVENTS } from 'shared/constants/busEvents';
 import KanbanColumn from './KanbanColumn.vue';
 import KanbanColumnSettings from './KanbanColumnSettings.vue';
 import KanbanCardModal from './KanbanCardModal.vue';
@@ -23,6 +25,11 @@ function closeCard() {
   selectedCard.value = null;
 }
 
+// Custom (PR8): incrementa badge no card quando chega mensagem incoming via ActionCable
+function handleKanbanUnreadIncrement(conversationId) {
+  store.commit('kanban/INCREMENT_CARD_UNREAD', conversationId);
+}
+
 // Garante que o modal fecha em qualquer mudança de rota,
 // mesmo que onBeforeRouteLeave não dispare em alguns aninhamentos do Chatwoot.
 watch(
@@ -40,6 +47,11 @@ onBeforeRouteLeave(() => {
 
 onMounted(() => {
   store.dispatch('kanban/fetchBoard');
+  emitter.on(BUS_EVENTS.KANBAN_UNREAD_INCREMENT, handleKanbanUnreadIncrement);
+});
+
+onUnmounted(() => {
+  emitter.off(BUS_EVENTS.KANBAN_UNREAD_INCREMENT, handleKanbanUnreadIncrement);
 });
 </script>
 

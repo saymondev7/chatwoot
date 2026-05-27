@@ -114,4 +114,31 @@ export default {
   SET_UI_FLAG(state, flags) {
     state.uiFlags = { ...state.uiFlags, ...flags };
   },
+
+  // Custom (PR8): badge de mensagens não lidas
+  INCREMENT_CARD_UNREAD(state, conversationId) {
+    const allCards = Object.values(state.cards).flat();
+    const card = allCards.find(c => c.conversation_id === conversationId);
+    if (!card) return;
+    const columnCards = state.cards[card.kanban_column_id] || [];
+    const idx = columnCards.findIndex(c => c.id === card.id);
+    if (idx === -1) return;
+    const updated = [...columnCards];
+    updated[idx] = {
+      ...updated[idx],
+      unread_count: (updated[idx].unread_count || 0) + 1,
+    };
+    state.cards = { ...state.cards, [card.kanban_column_id]: updated };
+  },
+
+  CLEAR_CARD_UNREAD(state, cardId) {
+    const colId = Object.keys(state.cards).find(id =>
+      state.cards[id].some(c => c.id === cardId)
+    );
+    if (!colId) return;
+    const idx = state.cards[colId].findIndex(c => c.id === cardId);
+    const updated = [...state.cards[colId]];
+    updated[idx] = { ...updated[idx], unread_count: 0 };
+    state.cards = { ...state.cards, [colId]: updated };
+  },
 };

@@ -2,6 +2,8 @@ import types from '../../mutation-types';
 import ConversationApi from '../../../api/inbox/conversation';
 import MessageApi from '../../../api/inbox/message';
 import { MESSAGE_STATUS, MESSAGE_TYPE } from 'shared/constants/messages';
+import { emitter } from 'shared/helpers/mitt';
+import { BUS_EVENTS } from 'shared/constants/busEvents';
 import { createPendingMessage } from 'dashboard/helper/commons';
 import {
   buildConversationList,
@@ -350,6 +352,15 @@ const actions = {
         canReply: true,
       });
       commit(types.ADD_CONVERSATION_ATTACHMENTS, message);
+      // Custom (PR8): emite evento pro badge de não lidas do kanban.
+      // Chatwoot não expõe um BUS_EVENT genérico de "nova mensagem via ActionCable",
+      // então emitimos aqui. Ref: docs/kanban-feature/10-unread-message-badge.md
+      if (!message.private) {
+        emitter.emit(
+          BUS_EVENTS.KANBAN_UNREAD_INCREMENT,
+          message.conversation_id
+        );
+      }
     }
     handleVoiceCallCreated(message, rootGetters?.getCurrentUserID);
   },

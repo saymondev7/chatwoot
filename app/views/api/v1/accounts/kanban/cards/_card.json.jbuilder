@@ -1,4 +1,5 @@
 json.id card.id
+json.unread_count (local_assigns[:unread_counts] || {})[card.conversation_id].to_i
 json.kanban_column_id card.kanban_column_id
 json.kanban_board_id card.kanban_board_id
 json.conversation_id card.conversation_id

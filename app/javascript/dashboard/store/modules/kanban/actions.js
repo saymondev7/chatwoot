@@ -1,4 +1,5 @@
 import KanbanAPI from '../../../api/kanban';
+import ConversationApi from '../../../api/inbox/conversation';
 
 export default {
   async fetchBoard({ commit }) {
@@ -101,5 +102,15 @@ export default {
 
   async deleteSchedule(_, { cardId, scheduleId }) {
     await KanbanAPI.deleteSchedule(cardId, scheduleId);
+  },
+
+  // Custom (PR8): marca conversa como lida para o assignee e zera badge no kanban
+  async clearCardUnread({ commit }, { cardId, conversationId }) {
+    try {
+      await ConversationApi.markMessageRead({ id: conversationId });
+    } catch {
+      // silent — badge zerando otimisticamente mesmo em erro de rede
+    }
+    commit('CLEAR_CARD_UNREAD', cardId);
   },
 };

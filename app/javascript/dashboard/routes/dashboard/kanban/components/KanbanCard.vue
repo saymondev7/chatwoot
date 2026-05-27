@@ -31,9 +31,17 @@ const formattedValue = computed(() => {
 
 <template>
   <div
-    class="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-3 cursor-pointer hover:shadow-md transition-shadow group"
+    class="relative bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-3 cursor-pointer hover:shadow-md transition-shadow group"
+    :class="card.unread_count > 0 ? 'border-l-2 border-l-red-500' : ''"
     @click="emit('edit', card)"
   >
+    <!-- Badge de mensagens não lidas (PR8) -->
+    <span
+      v-if="card.unread_count > 0"
+      class="absolute -top-1.5 -right-1.5 min-w-[1.1rem] h-[1.1rem] bg-red-500 text-white text-[0.6rem] font-bold rounded-full flex items-center justify-center px-0.5 leading-none shadow-sm pointer-events-none"
+    >
+      {{ card.unread_count >= 10 ? '9+' : card.unread_count }}
+    </span>
     <div class="flex items-start justify-between gap-2">
       <!-- Avatar + Nome -->
       <div class="flex items-center gap-2 min-w-0">

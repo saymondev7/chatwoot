@@ -198,6 +198,14 @@ function formatConvStatus(status) {
 }
 
 onMounted(async () => {
+  // Custom (PR8): zera badge de não lidas ao abrir o card
+  if (props.card.conversation_id && props.card.unread_count > 0) {
+    store.dispatch('kanban/clearCardUnread', {
+      cardId: props.card.id,
+      conversationId: props.card.conversation_id,
+    });
+  }
+
   if (!contact.value?.id) return;
   isLoadingConversations.value = true;
   try {
