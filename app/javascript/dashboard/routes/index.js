@@ -3,7 +3,10 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { frontendURL } from '../helper/URLHelper';
 import dashboard from './dashboard/dashboard.routes';
 import store from 'dashboard/store';
-import { validateLoggedInRoutes } from '../helper/routeHelpers';
+import {
+  validateLoggedInRoutes,
+  getDefaultLandingPath,
+} from '../helper/routeHelpers';
 import AnalyticsHelper from '../helper/AnalyticsHelper';
 
 const routes = [...dashboard.routes];
@@ -28,7 +31,10 @@ export const validateAuthenticateRoutePermission = (to, next) => {
   }
 
   if (to.name === 'no_accounts' || !to.name) {
-    return next(frontendURL(`accounts/${accountId}/dashboard`));
+    // Custom (PR9): usa kanban como landing padrão se kanban_enabled !== false
+    return next(
+      frontendURL(`accounts/${accountId}/${getDefaultLandingPath(user)}`)
+    );
   }
 
   const nextRoute = validateLoggedInRoutes(to, store.getters.getCurrentUser);
