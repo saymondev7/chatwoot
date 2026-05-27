@@ -17,13 +17,19 @@ export const routeIsAccessibleFor = (route, userPermissions = []) => {
   return hasPermissions(routePermissions, userPermissions);
 };
 
-export const defaultRedirectPage = (to, permissions) => {
+// Custom (PR9): retorna 'kanban' como landing padrão se kanban_enabled !== false.
+// Usando !== false em vez de === true para não quebrar se o atributo chegar undefined/null.
+export const getDefaultLandingPath = user =>
+  user?.kanban_enabled !== false ? 'kanban' : 'dashboard';
+
+export const defaultRedirectPage = (to, permissions, user) => {
   const { accountId } = to.params;
+  const defaultPath = getDefaultLandingPath(user);
 
   const permissionRoutes = [
     {
       permissions: [...ROLES, ...CONVERSATION_PERMISSIONS],
-      path: 'dashboard',
+      path: defaultPath,
     },
     { permissions: [CONTACT_PERMISSIONS], path: 'contacts' },
     { permissions: [REPORTS_PERMISSIONS], path: 'reports/overview' },
@@ -34,12 +40,13 @@ export const defaultRedirectPage = (to, permissions) => {
     hasPermissions(routePermissions, permissions)
   );
 
-  return `accounts/${accountId}/${route ? route.path : 'dashboard'}`;
+  return `accounts/${accountId}/${route ? route.path : defaultPath}`;
 };
 
 const validateActiveAccountRoutes = (to, user) => {
   // If the current account is active, then check for the route permissions
-  const accountDashboardURL = `accounts/${to.params.accountId}/dashboard`;
+  // Custom (PR9): usa kanban como landing padrão quando kanban_enabled !== false
+  const accountDashboardURL = `accounts/${to.params.accountId}/${getDefaultLandingPath(user)}`;
 
   // If the user is trying to access suspended route, redirect them to dashboard
   if (to.name === 'account_suspended') {
@@ -50,7 +57,7 @@ const validateActiveAccountRoutes = (to, user) => {
 
   const isAccessible = routeIsAccessibleFor(to, userPermissions);
   // If the route is not accessible for the user, return to dashboard screen
-  return isAccessible ? null : defaultRedirectPage(to, userPermissions);
+  return isAccessible ? null : defaultRedirectPage(to, userPermissions, user);
 };
 
 export const validateLoggedInRoutes = (to, user) => {
