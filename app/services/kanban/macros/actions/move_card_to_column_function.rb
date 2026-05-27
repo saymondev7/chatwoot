@@ -8,7 +8,7 @@ class Kanban::Macros::Actions::MoveCardToColumnFunction < Kanban::Macros::Action
   end
 
   def self.config_schema
-    { column_function: { type: 'enum', values: %w[auto_receive], required: true } }
+    { column_function: { type: 'enum', values: %w[auto_receive auto_active], required: true } }
   end
 
   def self.validate_config!(config)

@@ -14,6 +14,7 @@
       "FUNCTION_AUTO_RECEIVE": "Receber leads atribuídos",
       "FUNCTION_AUTO_WON": "Venda ganha automática",
       "FUNCTION_AUTO_LOST": "Encerrada sem venda automática",
+      "FUNCTION_AUTO_ACTIVE": "Atendimento ativo",
       "FUNCTION_ERROR": "Não foi possível atualizar a função da coluna. Tente novamente.",
       "CREATE_ERROR": "Não foi possível criar a coluna. Tente novamente.",
       "UPDATE_ERROR": "Não foi possível atualizar a coluna. Tente novamente."

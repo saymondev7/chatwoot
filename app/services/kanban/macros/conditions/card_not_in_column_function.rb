@@ -8,7 +8,7 @@ class Kanban::Macros::Conditions::CardNotInColumnFunction < Kanban::Macros::Cond
   end
 
   def self.config_schema
-    { column_function: { type: 'enum', values: %w[auto_receive] } }
+    { column_function: { type: 'enum', values: %w[auto_receive auto_active] } }
   end
 
   def matches?(card:, event:) # rubocop:disable Lint/UnusedMethodArgument

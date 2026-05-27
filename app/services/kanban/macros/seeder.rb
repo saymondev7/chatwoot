@@ -2,17 +2,29 @@ class Kanban::Macros::Seeder
   DEFAULTS = [
     {
       name: 'Lead enviou mensagem',
-      description: 'Move o card para a coluna de auto-recebimento quando o lead envia mensagem em conversa aberta.',
+      description: 'Move o card para a coluna de aguardando atendimento quando o lead responde enquanto o time está em atendimento ativo.',
       triggers: [
         { 'type' => 'lead_message_received', 'config' => {} }
       ],
       conditions: [
-        { 'type' => 'card_not_in_column_function', 'config' => { 'column_function' => 'auto_receive' } },
         { 'type' => 'conversation_status_is', 'config' => { 'status' => 'open' } },
         { 'type' => 'message_sender_is_lead', 'config' => {} }
       ],
       actions: [
         { 'type' => 'move_card_to_column_function', 'config' => { 'column_function' => 'auto_receive' } }
+      ]
+    },
+    {
+      name: 'Mensagem enviada pelo time',
+      description: 'Move o card para a coluna de atendimento ativo quando o time responde.',
+      triggers: [
+        { 'type' => 'message_received_from_team', 'config' => {} }
+      ],
+      conditions: [
+        { 'type' => 'conversation_status_is', 'config' => { 'status' => 'open' } }
+      ],
+      actions: [
+        { 'type' => 'move_card_to_column_function', 'config' => { 'column_function' => 'auto_active' } }
       ]
     }
   ].freeze
