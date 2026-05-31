@@ -108,6 +108,36 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     @conversation.status == 'open' && Current.user.is_a?(User) && Current.user&.agent?
   end
 
+  def silent_close
+    if @conversation.resolved?
+      render json: { status: 'ok', conversation_id: @conversation.id, was_already_resolved: true }, status: :ok
+      return
+    end
+
+    classification = current_account.conversation_classifications.find_by(id: params[:classification_id])
+    unless classification
+      render json: { error: 'classification_id is invalid or does not belong to this account' },
+             status: :unprocessable_entity
+      return
+    end
+
+    if params[:closing_note].blank?
+      render json: { error: 'closing_note is required' }, status: :unprocessable_entity
+      return
+    end
+
+    @conversation.classification_id = classification.id
+    @conversation.closing_note = params[:closing_note]
+    @conversation.update!(status: :resolved)
+
+    render json: {
+      status: 'ok',
+      conversation_id: @conversation.id,
+      classification: classification.name,
+      was_already_resolved: false
+    }, status: :ok
+  end
+
   def toggle_priority
     @conversation.toggle_priority(params[:priority])
     head :ok
