@@ -1,6 +1,5 @@
 <script>
 import { ref } from 'vue';
-import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useKeyboardEvents } from 'dashboard/composables/useKeyboardEvents';
 import FileUpload from 'vue-upload-component';
 import * as ActiveStorage from 'activestorage';
@@ -133,9 +132,6 @@ export default {
     'toggleQuotedReply',
   ],
   setup(props) {
-    const { setSignatureFlagForInbox, fetchSignatureFlagFromUISettings } =
-      useUISettings();
-
     const uploadRef = ref(false);
 
     const keyboardEvents = {
@@ -160,8 +156,6 @@ export default {
     useKeyboardEvents(keyboardEvents);
 
     return {
-      setSignatureFlagForInbox,
-      fetchSignatureFlagFromUISettings,
       uploadRef,
     };
   },
@@ -236,19 +230,6 @@ export default {
           return 'i-ph-stop';
       }
     },
-    showMessageSignatureButton() {
-      if (this.isEditorDisabled) return false;
-      return !this.isOnPrivateNote;
-    },
-    sendWithSignature() {
-      // channelType is sourced from inboxMixin
-      return this.fetchSignatureFlagFromUISettings(this.channelType);
-    },
-    signatureToggleTooltip() {
-      return this.sendWithSignature
-        ? this.$t('CONVERSATION.FOOTER.DISABLE_SIGN_TOOLTIP')
-        : this.$t('CONVERSATION.FOOTER.ENABLE_SIGN_TOOLTIP');
-    },
     enableInsertArticleInReply() {
       return this.portalSlug;
     },
@@ -265,9 +246,6 @@ export default {
     ActiveStorage.start();
   },
   methods: {
-    toggleMessageSignature() {
-      this.setSignatureFlagForInbox(this.channelType, !this.sendWithSignature);
-    },
     toggleInsertArticle() {
       this.$emit('toggleInsertArticle');
     },
@@ -329,15 +307,6 @@ export default {
         sm
         :label="recordingAudioDurationText"
         @click="toggleAudioRecorderPlayPause"
-      />
-      <NextButton
-        v-if="showMessageSignatureButton"
-        v-tooltip.top-end="signatureToggleTooltip"
-        icon="i-ph-signature"
-        slate
-        faded
-        sm
-        @click="toggleMessageSignature"
       />
       <NextButton
         v-if="showQuotedReplyToggle"
