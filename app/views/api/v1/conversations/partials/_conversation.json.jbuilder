@@ -58,7 +58,8 @@ json.last_non_activity_message conversation.messages.where(account_id: conversat
 json.last_activity_at conversation.last_activity_at.to_i
 json.priority conversation.priority
 json.waiting_since conversation.waiting_since.to_i.to_i
-json.sla_policy_id conversation.sla_policy_id
+sla_applicable = !conversation.respond_to?(:sla_applicable?) || conversation.sla_applicable?
+json.sla_policy_id sla_applicable ? conversation.sla_policy_id : nil
 json.classification_id conversation.classification_id
 json.closing_note conversation.closing_note
 json.store conversation.store

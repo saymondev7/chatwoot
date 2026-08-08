@@ -18,6 +18,7 @@ class AsyncDispatcher < BaseDispatcher
       Kanban::Macros::MessageCreatedListener.instance,
       NotificationListener.instance,
       ParticipationListener.instance,
+      Conversations::UnreadCounts::Listener.instance,
       ReportingEventListener.instance,
       WebhookListener.instance
     ]

@@ -28,7 +28,7 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
   def attachments
     @attachments_count = @conversation.attachments.count
     @attachments = @conversation.attachments
-                                .includes(:message)
+                                .includes({ file_attachment: :blob }, message: [:inbox, { sender: { avatar_attachment: :blob } }])
                                 .order(created_at: :desc)
                                 .page(attachment_params[:page])
                                 .per(ATTACHMENT_RESULTS_PER_PAGE)
@@ -80,7 +80,7 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
 
   def toggle_status
     # FIXME: move this logic into a service object
-    if pending_to_open_by_bot?
+    if bot_handoff?
       @conversation.bot_handoff!
     elsif params[:status].present?
       return unless validate_resolution_requirements!(resolving?)
@@ -95,17 +95,13 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
       set_closing_attributes if will_resolve
       @status = @conversation.toggle_status
     end
-    assign_conversation if should_assign_conversation?
+    handle_human_open if @conversation.open? && Current.user.is_a?(User)
   end
 
-  def pending_to_open_by_bot?
+  def bot_handoff?
     return false unless Current.user.is_a?(AgentBot)
 
     @conversation.status == 'pending' && params[:status] == 'open'
-  end
-
-  def should_assign_conversation?
-    @conversation.status == 'open' && Current.user.is_a?(User) && Current.user&.agent?
   end
 
   def silent_close
@@ -177,7 +173,7 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
 
   def destroy
     authorize @conversation, :destroy?
-    ::DeleteObjectJob.perform_later(@conversation, Current.user, request.ip)
+    ::Conversations::DeleteService.new(conversation: @conversation, user: Current.user, ip: request.ip).perform
     head :ok
   end
 
@@ -199,6 +195,9 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     # rubocop:disable Rails/SkipsModelValidations
     @conversation.update_columns(updates)
     # rubocop:enable Rails/SkipsModelValidations
+
+    ::Conversations::UnreadCounts::Notifier.new(@conversation).perform
+    ::Conversations::UnreadCounts::FilteredCountInvalidator.new(Current.account).conversation_changed!
   end
 
   def should_update_last_seen?
@@ -244,8 +243,9 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     true
   end
 
-  def assign_conversation
-    @conversation.assignee = current_user
+  def handle_human_open
+    @conversation.assignee_agent_bot = nil
+    @conversation.assignee = Current.user if Current.user.agent?
     @conversation.save!
   end
 
