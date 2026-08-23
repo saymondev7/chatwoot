@@ -74,7 +74,8 @@ const actions = {
         'appliedFilters'
       );
     } catch (error) {
-      // Handle error
+      commit(types.CLEAR_LIST_LOADING_STATUS);
+      throw error;
     }
   },
 
@@ -529,7 +530,7 @@ const actions = {
         customAttributes: custom_attributes,
       });
     } catch (error) {
-      // Handle error
+      throw new Error(error);
     }
   },
 

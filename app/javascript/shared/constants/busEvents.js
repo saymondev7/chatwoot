@@ -15,4 +15,5 @@ export const BUS_EVENTS = {
   INSERT_INTO_NORMAL_EDITOR: 'insertIntoNormalEditor',
   // Custom (PR8): kanban badge — emitted by addMessage action for incoming non-private messages
   KANBAN_UNREAD_INCREMENT: 'kanbanUnreadIncrement',
+  MFA_STATE_CHANGED: 'MFA_STATE_CHANGED',
 };
