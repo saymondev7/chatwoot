@@ -23,6 +23,7 @@ import CsatResponses from './CsatResponses.vue';
 import BotReports from './BotReports.vue';
 import LiveReports from './LiveReports.vue';
 import SLAReports from './SLAReports.vue';
+import ReportsPortal from './ReportsPortal.vue';
 
 const meta = {
   featureFlag: FEATURE_FLAGS.REPORTS,
@@ -110,6 +111,12 @@ const revisedReportRoutes = [
 
 export default {
   routes: [
+    {
+      path: frontendURL('accounts/:accountId/reports-portal'),
+      name: 'reports_portal',
+      meta,
+      component: ReportsPortal,
+    },
     {
       path: frontendURL('accounts/:accountId/reports'),
       component: ReportsWrapper,

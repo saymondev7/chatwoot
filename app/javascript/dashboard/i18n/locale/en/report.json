@@ -1,6 +1,10 @@
 {
   "REPORT": {
     "HEADER": "Conversations",
+    "PORTAL": {
+      "IFRAME_TITLE": "Reports Portal",
+      "NOT_CONFIGURED": "Reports portal is not configured yet."
+    },
     "LOADING_CHART": "Loading chart data...",
     "NO_ENOUGH_DATA": "We've not received enough data points to generate report, Please try again later.",
     "DOWNLOAD_CONVERSATION_REPORTS": "Download conversation reports",
