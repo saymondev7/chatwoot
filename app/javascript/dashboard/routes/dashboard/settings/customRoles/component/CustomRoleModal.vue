@@ -11,6 +11,7 @@ import {
   CONVERSATION_UNASSIGNED_PERMISSIONS,
   CONVERSATION_PARTICIPATING_PERMISSIONS,
 } from 'dashboard/constants/permissions.js';
+import { SIDEBAR_VISIBILITY_ITEMS } from 'dashboard/constants/sidebarItems.js';
 
 import Button from 'dashboard/components-next/button/Button.vue';
 
@@ -34,6 +35,7 @@ const { t } = useI18n();
 const name = ref('');
 const description = ref('');
 const selectedPermissions = ref([]);
+const hiddenSidebarItems = ref([]);
 
 const nameInput = ref(null);
 
@@ -54,6 +56,7 @@ const resetForm = () => {
   name.value = '';
   description.value = '';
   selectedPermissions.value = [];
+  hiddenSidebarItems.value = [];
   v$.value.$reset();
 };
 
@@ -61,6 +64,7 @@ const populateEditForm = () => {
   name.value = props.selectedRole.name || '';
   description.value = props.selectedRole.description || '';
   selectedPermissions.value = props.selectedRole.permissions || [];
+  hiddenSidebarItems.value = props.selectedRole.hidden_sidebar_items || [];
 };
 
 watch(
@@ -123,6 +127,7 @@ const handleCustomRole = async () => {
       name: name.value,
       description: description.value,
       permissions: selectedPermissions.value,
+      hidden_sidebar_items: hiddenSidebarItems.value,
     };
 
     if (props.mode === 'edit') {
@@ -205,6 +210,34 @@ const isSubmitDisabled = computed(
             />
             <label :for="permission" class="text-sm font-normal">
               {{ $t(`CUSTOM_ROLE.PERMISSIONS.${permission.toUpperCase()}`) }}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full">
+        <label>
+          {{ $t('CUSTOM_ROLE.FORM.HIDDEN_SIDEBAR_ITEMS.LABEL') }}
+        </label>
+        <p class="text-xs text-n-slate-11 mt-0.5 mb-2">
+          {{ $t('CUSTOM_ROLE.FORM.HIDDEN_SIDEBAR_ITEMS.HELP_TEXT') }}
+        </p>
+        <div class="flex flex-col gap-2.5 mb-4 mt-2">
+          <div
+            v-for="item in SIDEBAR_VISIBILITY_ITEMS"
+            :key="item.key"
+            class="flex items-center"
+          >
+            <input
+              :id="`hide-${item.key}`"
+              v-model="hiddenSidebarItems"
+              type="checkbox"
+              :value="item.key"
+              name="hidden_sidebar_items"
+              class="ltr:mr-2 rtl:ml-2"
+            />
+            <label :for="`hide-${item.key}`" class="text-sm font-normal">
+              {{ $t(item.labelKey) }}
             </label>
           </div>
         </div>
