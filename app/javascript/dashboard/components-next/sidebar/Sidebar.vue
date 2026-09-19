@@ -331,9 +331,10 @@ const closeMobileSidebar = () => {
   emit('closeMobileSidebar');
 };
 
-const menuItems = computed(() => {
+const allMenuItems = computed(() => {
   return [
     {
+      key: 'inbox',
       name: 'Inbox',
       label: t('SIDEBAR.INBOX'),
       icon: 'i-lucide-inbox',
@@ -344,6 +345,7 @@ const menuItems = computed(() => {
       },
     },
     {
+      key: 'conversations',
       name: 'Conversation',
       label: t('SIDEBAR.CONVERSATIONS'),
       icon: 'i-lucide-message-circle',
@@ -465,6 +467,7 @@ const menuItems = computed(() => {
       ],
     },
     {
+      key: 'captain',
       name: 'Captain',
       icon: 'i-woot-captain',
       label: t('SIDEBAR.CAPTAIN'),
@@ -549,6 +552,7 @@ const menuItems = computed(() => {
     ...(isCallsAvailable.value
       ? [
           {
+            key: 'calls',
             name: 'Calls',
             label: t('SIDEBAR.CALLS'),
             icon: 'i-lucide-phone',
@@ -558,6 +562,7 @@ const menuItems = computed(() => {
         ]
       : []),
     {
+      key: 'contacts',
       name: 'Contacts',
       label: t('SIDEBAR.CONTACTS'),
       icon: 'i-lucide-contact',
@@ -625,6 +630,7 @@ const menuItems = computed(() => {
       ],
     },
     {
+      key: 'companies',
       name: 'Companies',
       label: t('SIDEBAR.COMPANIES'),
       icon: 'i-lucide-building-2',
@@ -642,18 +648,21 @@ const menuItems = computed(() => {
       ],
     },
     {
+      key: 'reports',
       name: 'Reports',
       label: t('SIDEBAR.REPORTS'),
       icon: 'i-lucide-chart-spline',
       to: accountScopedRoute('reports_portal'),
     },
     {
+      key: 'kanban',
       name: 'Kanban',
       label: t('KANBAN.TITLE'),
       icon: 'i-lucide-kanban',
       to: accountScopedRoute('kanban-board'),
     },
     {
+      key: 'campaigns',
       name: 'Campaigns',
       label: t('SIDEBAR.CAMPAIGNS'),
       icon: 'i-lucide-megaphone',
@@ -676,6 +685,7 @@ const menuItems = computed(() => {
       ],
     },
     {
+      key: 'help_center',
       name: 'Portals',
       label: t('SIDEBAR.HELP_CENTER.TITLE'),
       icon: 'i-lucide-library-big',
@@ -723,6 +733,7 @@ const menuItems = computed(() => {
       ],
     },
     {
+      key: 'settings',
       name: 'Settings',
       label: t('SIDEBAR.SETTINGS'),
       icon: 'i-lucide-bolt',
@@ -904,6 +915,20 @@ const menuItems = computed(() => {
     },
   ];
 });
+
+// Oculta itens de topo conforme a Função Personalizada do usuário atual
+// (CustomRole#hidden_sidebar_items) — ver constants/sidebarItems.js e
+// CustomRoleModal.vue. Sem custom_role (admin, agente padrão) ou sem
+// nada marcado, nada é ocultado.
+const currentAccount = useMapGetter('getCurrentAccount');
+const hiddenSidebarItems = computed(
+  () => currentAccount.value?.custom_role?.hidden_sidebar_items || []
+);
+const menuItems = computed(() =>
+  allMenuItems.value.filter(
+    item => !item.key || !hiddenSidebarItems.value.includes(item.key)
+  )
+);
 </script>
 
 <template>

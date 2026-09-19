@@ -55,6 +55,10 @@
         "LABEL": "Permissions",
         "ERROR": "Permissions are required."
       },
+      "HIDDEN_SIDEBAR_ITEMS": {
+        "LABEL": "Hidden sidebar items",
+        "HELP_TEXT": "Menu items checked below are hidden from agents with this role. Unchecked items, including any added in the future, stay visible."
+      },
       "CANCEL_BUTTON_TEXT": "Cancel",
       "API": {
         "ERROR_MESSAGE": "Could not connect to Woot server. Please try again."
