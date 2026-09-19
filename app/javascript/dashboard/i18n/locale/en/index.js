@@ -38,6 +38,7 @@ import settings from './settings.json';
 import signup from './signup.json';
 import sla from './sla.json';
 import snooze from './snooze.json';
+import specialSchedules from './specialSchedules.json';
 import teamsSettings from './teamsSettings.json';
 import whatsappTemplates from './whatsappTemplates.json';
 import whatsappTemplateMgmt from './whatsappTemplateMgmt.json';
@@ -88,6 +89,7 @@ export default {
   ...signup,
   ...sla,
   ...snooze,
+  ...specialSchedules,
   ...teamsSettings,
   ...whatsappTemplates,
   ...whatsappTemplateMgmt,

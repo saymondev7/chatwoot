@@ -830,6 +830,12 @@ const allMenuItems = computed(() => {
           to: accountScopedRoute('kanban_macros_list'),
         },
         {
+          name: 'Settings Special Schedules',
+          label: t('SIDEBAR.SPECIAL_SCHEDULES'),
+          icon: 'i-lucide-calendar-clock',
+          to: accountScopedRoute('special_schedules_list'),
+        },
+        {
           name: 'Settings Custom Attributes',
           label: t('SIDEBAR.CUSTOM_ATTRIBUTES'),
           icon: 'i-lucide-code',

@@ -1,0 +1,43 @@
+{
+  "SPECIAL_SCHEDULES": {
+    "TITLE": "Special Schedules",
+    "SUBTITLE": "Holidays, promotions and custom opening hours. The AI agent reads these dates and answers customers with the message you write here.",
+    "LOADING": "Loading special schedules",
+    "ERROR": "Something went wrong. Please try again.",
+    "EMPTY_STATE": "No special schedule configured yet.",
+    "NEW": "New schedule",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "DELETE_CONFIRM": "Are you sure?",
+    "TABLE": {
+      "NAME": "Name",
+      "PERIOD": "Period",
+      "TYPE": "Type",
+      "MESSAGE": "Message to the customer",
+      "ENABLED": "Enabled"
+    },
+    "TYPES": {
+      "CLOSED": "Closed",
+      "CUSTOM_HOURS": "Custom hours",
+      "PROMOTION": "Promotion",
+      "NOTICE": "Notice"
+    },
+    "FORM": {
+      "CREATE_TITLE": "New special schedule",
+      "EDIT_TITLE": "Edit special schedule",
+      "NAME_LABEL": "Name",
+      "NAME_PLACEHOLDER": "Christmas, Black Friday, Inventory day",
+      "STARTS_ON_LABEL": "Start date",
+      "ENDS_ON_LABEL": "End date",
+      "TYPE_LABEL": "Type",
+      "OPENS_AT_LABEL": "Opens at",
+      "CLOSES_AT_LABEL": "Closes at",
+      "MESSAGE_LABEL": "Message to the customer",
+      "MESSAGE_PLACEHOLDER": "Closed on Christmas day. We reopen on the 26th at 9am.",
+      "MESSAGE_HINT": "The AI agent replies with this text exactly as written.",
+      "ENABLED_LABEL": "Enabled",
+      "SAVE": "Save",
+      "CANCEL": "Cancel"
+    }
+  }
+}
