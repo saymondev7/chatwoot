@@ -98,6 +98,10 @@ en:
       macros:
         system_macro_cannot_be_deleted: "System macros cannot be deleted. You can disable them instead."
         restore_only_for_system_macros: "Only system macros can be restored to their default configuration."
+    special_schedules:
+      ends_on_before_starts_on: "End date cannot be before the start date"
+      close_before_open: "Closing time cannot be before opening time"
+      invalid_date: "Invalid date. Use the YYYY-MM-DD format."
     voice:
       call_already_accepted: '%{agent_name} is already handling the call.'
     assignment_policy:

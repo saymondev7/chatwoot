@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_09_19_173824) do
+ActiveRecord::Schema[7.2].define(version: 2026_09_19_190000) do
   # These extensions should be enabled to support this database
   enable_extension "pg_stat_statements"
   enable_extension "pg_trgm"
@@ -1575,6 +1575,23 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_19_173824) do
     t.index ["account_id"], name: "index_sla_policies_on_account_id"
   end
 
+  create_table "special_schedules", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "name", null: false
+    t.date "starts_on", null: false
+    t.date "ends_on", null: false
+    t.integer "schedule_type", default: 0, null: false
+    t.integer "open_hour"
+    t.integer "open_minutes"
+    t.integer "close_hour"
+    t.integer "close_minutes"
+    t.text "message", null: false
+    t.boolean "enabled", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "starts_on", "ends_on"], name: "idx_on_account_id_starts_on_ends_on_4fb5195aeb"
+  end
+
   create_table "taggings", id: :serial, force: :cascade do |t|
     t.integer "tag_id"
     t.string "taggable_type"
@@ -1739,6 +1756,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_09_19_173824) do
   add_foreign_key "kanban_cards", "users", column: "created_by_id"
   add_foreign_key "kanban_columns", "accounts"
   add_foreign_key "kanban_macros", "accounts", on_delete: :cascade
+  add_foreign_key "special_schedules", "accounts", on_delete: :cascade
   add_foreign_key "user_sessions", "users"
   create_trigger("accounts_after_insert_row_tr", :generated => true, :compatibility => 1).
       on("accounts").

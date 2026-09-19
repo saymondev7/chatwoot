@@ -1,0 +1,43 @@
+{
+  "SPECIAL_SCHEDULES": {
+    "TITLE": "Programação Especial",
+    "SUBTITLE": "Feriados, promoções e horários diferentes do normal. O agente de I.A. consulta estas datas e responde ao cliente com a mensagem que você escrever aqui.",
+    "LOADING": "Carregando programações especiais",
+    "ERROR": "Algo deu errado. Tente novamente.",
+    "EMPTY_STATE": "Nenhuma programação especial cadastrada ainda.",
+    "NEW": "Nova programação",
+    "EDIT": "Editar",
+    "DELETE": "Excluir",
+    "DELETE_CONFIRM": "Tem certeza?",
+    "TABLE": {
+      "NAME": "Nome",
+      "PERIOD": "Período",
+      "TYPE": "Tipo",
+      "MESSAGE": "Mensagem para o cliente",
+      "ENABLED": "Ativa"
+    },
+    "TYPES": {
+      "CLOSED": "Fechado",
+      "CUSTOM_HOURS": "Horário especial",
+      "PROMOTION": "Promoção",
+      "NOTICE": "Aviso"
+    },
+    "FORM": {
+      "CREATE_TITLE": "Nova programação especial",
+      "EDIT_TITLE": "Editar programação especial",
+      "NAME_LABEL": "Nome",
+      "NAME_PLACEHOLDER": "Natal, Black Friday, dia de inventário",
+      "STARTS_ON_LABEL": "Data inicial",
+      "ENDS_ON_LABEL": "Data final",
+      "TYPE_LABEL": "Tipo",
+      "OPENS_AT_LABEL": "Abre às",
+      "CLOSES_AT_LABEL": "Fecha às",
+      "MESSAGE_LABEL": "Mensagem para o cliente",
+      "MESSAGE_PLACEHOLDER": "Fechado no Natal. Reabrimos dia 26 às 09h.",
+      "MESSAGE_HINT": "O agente de I.A. responde exatamente com este texto.",
+      "ENABLED_LABEL": "Ativa",
+      "SAVE": "Salvar",
+      "CANCEL": "Cancelar"
+    }
+  }
+}
