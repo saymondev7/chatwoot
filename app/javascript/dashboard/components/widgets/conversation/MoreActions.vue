@@ -5,6 +5,7 @@ import { useStore } from 'vuex';
 import { useAlert } from 'dashboard/composables';
 import { useI18n } from 'vue-i18n';
 import { emitter } from 'shared/helpers/mitt';
+import ConversationApi from 'dashboard/api/inbox/conversation';
 import EmailTranscriptModal from './EmailTranscriptModal.vue';
 import ResolveAction from '../../buttons/ResolveAction.vue';
 import ButtonV4 from 'dashboard/components-next/button/Button.vue';
@@ -21,6 +22,7 @@ const store = useStore();
 const { t } = useI18n();
 
 const [showEmailActionsModal, toggleEmailModal] = useToggle(false);
+const [isExportingPdf, toggleExportingPdf] = useToggle(false);
 const [showActionsDropdown, toggleDropdown] = useToggle(false);
 
 const currentChat = computed(() => store.getters.getSelectedChat);
@@ -51,8 +53,35 @@ const actionMenuItems = computed(() => {
     value: 'send_transcript',
   });
 
+  items.push({
+    icon: 'i-lucide-file-text',
+    label: t('CONTACT_PANEL.EXPORT_PDF'),
+    action: 'export_pdf',
+    value: 'export_pdf',
+    disabled: isExportingPdf.value,
+  });
+
   return items;
 });
+
+const exportPdf = async () => {
+  toggleExportingPdf(true);
+  try {
+    const response = await ConversationApi.exportPdf(currentChat.value.id);
+    const url = window.URL.createObjectURL(
+      new Blob([response.data], { type: 'application/pdf' })
+    );
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `conversa-${currentChat.value.id}.pdf`;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  } catch {
+    useAlert(t('CONTACT_PANEL.EXPORT_PDF_ERROR'));
+  } finally {
+    toggleExportingPdf(false);
+  }
+};
 
 const handleActionClick = ({ action }) => {
   toggleDropdown(false);
@@ -65,6 +94,8 @@ const handleActionClick = ({ action }) => {
     useAlert(t('CONTACT_PANEL.UNMUTED_SUCCESS'));
   } else if (action === 'send_transcript') {
     toggleEmailModal();
+  } else if (action === 'export_pdf') {
+    exportPdf();
   }
 };
 

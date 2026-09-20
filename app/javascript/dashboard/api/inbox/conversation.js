@@ -126,6 +126,13 @@ class ConversationApi extends ApiClient {
     return axios.post(`${this.url}/${conversationId}/transcript`, { email });
   }
 
+  exportPdf(conversationId) {
+    return axios.get(`${this.url}/${conversationId}/export_pdf`, {
+      params: { timezone: Intl.DateTimeFormat().resolvedOptions().timeZone },
+      responseType: 'blob',
+    });
+  }
+
   updateCustomAttributes({ conversationId, customAttributes }) {
     return axios.post(`${this.url}/${conversationId}/custom_attributes`, {
       custom_attributes: customAttributes,

@@ -51,6 +51,8 @@ gem 'gmail_xoauth'
 gem 'net-smtp',  '~> 0.3.4'
 # Prevent CSV injection
 gem 'csv-safe'
+# Generate PDF exports (pure Ruby, no external binary)
+gem 'prawn', '~> 2.5'
 
 ##-- for active storage --##
 gem 'aws-sdk-s3', require: false

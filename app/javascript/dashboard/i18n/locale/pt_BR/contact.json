@@ -53,6 +53,8 @@
     "MUTED_SUCCESS": "Este contato foi bloqueado com sucesso. Você não será notificado por nenhuma conversação futura.",
     "UNMUTED_SUCCESS": "Este contato foi desbloqueado com sucesso.",
     "SEND_TRANSCRIPT": "Enviar Transcrição",
+    "EXPORT_PDF": "Exportar em PDF",
+    "EXPORT_PDF_ERROR": "Não foi possível exportar a conversa. Tente novamente.",
     "EDIT_LABEL": "Alterar",
     "SIDEBAR_SECTIONS": {
       "CUSTOM_ATTRIBUTES": "Atributos Personalizados",

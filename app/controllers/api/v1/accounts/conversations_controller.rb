@@ -79,6 +79,11 @@ class Api::V1::Accounts::ConversationsController < Api::V1::Accounts::BaseContro
     head :ok
   end
 
+  def export_pdf
+    service = Conversations::PdfExportService.new(conversation: @conversation, timezone: params[:timezone])
+    send_data service.perform, filename: service.filename, type: 'application/pdf', disposition: 'attachment'
+  end
+
   def toggle_status
     # FIXME: move this logic into a service object
     if bot_handoff?
