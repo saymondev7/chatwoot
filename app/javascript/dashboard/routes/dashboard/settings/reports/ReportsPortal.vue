@@ -56,7 +56,7 @@ onBeforeUnmount(() => window.removeEventListener('message', handleMessage));
 </script>
 
 <template>
-  <div class="w-full h-full bg-n-surface-1">
+  <div class="flex flex-1 w-full h-full min-w-0 bg-n-surface-1">
     <iframe
       v-if="portalURL"
       ref="iframeRef"
