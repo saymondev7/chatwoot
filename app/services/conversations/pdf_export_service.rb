@@ -63,7 +63,7 @@ class Conversations::PdfExportService
       'Status' => @conversation.status,
       'Criada em' => format_time(@conversation.created_at)
     }
-    labels = @conversation.labels.map(&:title)
+    labels = @conversation.label_list
     lines['Etiquetas'] = labels.join(', ') if labels.any?
     lines['Exportada em'] = format_time(Time.current)
     lines
